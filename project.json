@@ -6,50 +6,19 @@
 	{
 		"properties" : 
 		{
-			"birthdate" : 
+			"schemecolor" : 
 			{
-				"group" : "group_clock",
-				"index" : 12,
-				"order" : 112,
-				"text" : "Birth Date",
-				"type" : "textinput",
-				"value" : "2004-07-04T09:00:00+07:00"
+				"order" : 0,
+				"text" : "ui_browse_properties_scheme_color",
+				"type" : "color",
+				"value" : "0.6627450980392157 0.1843137254901961 0.9372549019607843"
 			},
-			"clockblur" : 
+			"group_core" : 
 			{
-				"group" : "group_clock",
-				"index" : 15,
-				"max" : 50,
-				"min" : 0,
-				"order" : 115,
-				"step" : 1,
-				"text" : "Background Blur (px)",
-				"type" : "slider",
-				"value" : 2
-			},
-			"clockoffsetx" : 
-			{
-				"group" : "group_clock",
-				"index" : 13,
-				"max" : 100,
-				"min" : 0,
-				"order" : 113,
-				"step" : 1,
-				"text" : "Clock Horizontal Position (%)",
-				"type" : "slider",
-				"value" : 5
-			},
-			"clockoffsety" : 
-			{
-				"group" : "group_clock",
-				"index" : 14,
-				"max" : 100,
-				"min" : 0,
-				"order" : 114,
-				"step" : 1,
-				"text" : "Clock Vertical Position (%)",
-				"type" : "slider",
-				"value" : 50
+				"index" : 0,
+				"order" : 100,
+				"text" : "Core Settings",
+				"type" : "group"
 			},
 			"corebrightness" : 
 			{
@@ -62,6 +31,30 @@
 				"text" : "Brightness",
 				"type" : "slider",
 				"value" : 0.5
+			},
+			"corespeed" : 
+			{
+				"group" : "group_core",
+				"index" : 2,
+				"max" : 4,
+				"min" : 0,
+				"order" : 102,
+				"step" : 0.05,
+				"text" : "Speed",
+				"type" : "slider",
+				"value" : 1
+			},
+			"corezoom" : 
+			{
+				"group" : "group_core",
+				"index" : 3,
+				"max" : 50,
+				"min" : 5,
+				"order" : 103,
+				"step" : 1,
+				"text" : "Camera Distance",
+				"type" : "slider",
+				"value" : 14
 			},
 			"coreoffsetx" : 
 			{
@@ -87,29 +80,41 @@
 				"type" : "slider",
 				"value" : 0
 			},
-			"corespeed" : 
+			"ringamount" : 
 			{
 				"group" : "group_core",
-				"index" : 2,
-				"max" : 4,
-				"min" : 0,
-				"order" : 102,
-				"step" : 0.05,
-				"text" : "Speed",
-				"type" : "slider",
-				"value" : 1
-			},
-			"corezoom" : 
-			{
-				"group" : "group_core",
-				"index" : 3,
-				"max" : 50,
-				"min" : 5,
-				"order" : 103,
+				"index" : 6,
+				"max" : 8,
+				"min" : 1,
+				"order" : 106,
 				"step" : 1,
-				"text" : "Camera Distance",
+				"text" : "Ring Amount",
 				"type" : "slider",
-				"value" : 14
+				"value" : 4
+			},
+			"particleamount" : 
+			{
+				"group" : "group_core",
+				"index" : 7,
+				"max" : 10000,
+				"min" : 500,
+				"order" : 107,
+				"step" : 500,
+				"text" : "Particle Amount",
+				"type" : "slider",
+				"value" : 4500
+			},
+			"particlesize" : 
+			{
+				"group" : "group_core",
+				"index" : 8,
+				"max" : 0.5,
+				"min" : 0.01,
+				"order" : 108,
+				"step" : 0.01,
+				"text" : "Particle Size",
+				"type" : "slider",
+				"value" : 0.08
 			},
 			"debrisamount" : 
 			{
@@ -142,12 +147,50 @@
 				"text" : "Clock & UI Settings",
 				"type" : "group"
 			},
-			"group_core" : 
+			"birthdate" : 
 			{
-				"index" : 0,
-				"order" : 100,
-				"text" : "Core Settings",
-				"type" : "group"
+				"group" : "group_clock",
+				"index" : 12,
+				"order" : 112,
+				"text" : "Birth Date",
+				"type" : "textinput",
+				"value" : "2004-07-04T09:00:00+07:00"
+			},
+			"clockoffsetx" : 
+			{
+				"group" : "group_clock",
+				"index" : 13,
+				"max" : 100,
+				"min" : 0,
+				"order" : 113,
+				"step" : 1,
+				"text" : "Clock Horizontal Position (%)",
+				"type" : "slider",
+				"value" : 5
+			},
+			"clockoffsety" : 
+			{
+				"group" : "group_clock",
+				"index" : 14,
+				"max" : 100,
+				"min" : 0,
+				"order" : 114,
+				"step" : 1,
+				"text" : "Clock Vertical Position (%)",
+				"type" : "slider",
+				"value" : 50
+			},
+			"clockblur" : 
+			{
+				"group" : "group_clock",
+				"index" : 15,
+				"max" : 50,
+				"min" : 0,
+				"order" : 115,
+				"step" : 1,
+				"text" : "Background Blur (px)",
+				"type" : "slider",
+				"value" : 2
 			},
 			"group_text" : 
 			{
@@ -156,103 +199,6 @@
 				"text" : "Label Settings",
 				"type" : "group"
 			},
-			"label_day" : 
-			{
-				"group" : "group_text",
-				"index" : 22,
-				"order" : 122,
-				"text" : "Day",
-				"type" : "textinput",
-				"value" : "Ngày"
-			},
-			"label_hour" : 
-			{
-				"group" : "group_text",
-				"index" : 23,
-				"order" : 123,
-				"text" : "Hour",
-				"type" : "textinput",
-				"value" : "Giờ"
-			},
-			"label_minute" : 
-			{
-				"group" : "group_text",
-				"index" : 24,
-				"order" : 124,
-				"text" : "Minute",
-				"type" : "textinput",
-				"value" : "Phút"
-			},
-			"label_month" : 
-			{
-				"group" : "group_text",
-				"index" : 21,
-				"order" : 121,
-				"text" : "Month",
-				"type" : "textinput",
-				"value" : "Tháng"
-			},
-			"label_second" : 
-			{
-				"group" : "group_text",
-				"index" : 25,
-				"order" : 125,
-				"text" : "Second",
-				"type" : "textinput",
-				"value" : "Giây"
-			},
-			"label_year" : 
-			{
-				"group" : "group_text",
-				"index" : 20,
-				"order" : 120,
-				"text" : "Year",
-				"type" : "textinput",
-				"value" : "Năm"
-			},
-			"particleamount" : 
-			{
-				"group" : "group_core",
-				"index" : 7,
-				"max" : 10000,
-				"min" : 500,
-				"order" : 107,
-				"step" : 500,
-				"text" : "Particle Amount",
-				"type" : "slider",
-				"value" : 4500
-			},
-			"particlesize" : 
-			{
-				"group" : "group_core",
-				"index" : 8,
-				"max" : 0.5,
-				"min" : 0.01,
-				"order" : 108,
-				"step" : 0.01,
-				"text" : "Particle Size",
-				"type" : "slider",
-				"value" : 0.08
-			},
-			"ringamount" : 
-			{
-				"group" : "group_core",
-				"index" : 6,
-				"max" : 8,
-				"min" : 1,
-				"order" : 106,
-				"step" : 1,
-				"text" : "Ring Amount",
-				"type" : "slider",
-				"value" : 4
-			},
-			"schemecolor" : 
-			{
-				"order" : 0,
-				"text" : "ui_browse_properties_scheme_color",
-				"type" : "color",
-				"value" : "0.6627450980392157 0.1843137254901961 0.9372549019607843"
-			},
 			"timerlabeltop" : 
 			{
 				"group" : "group_text",
@@ -260,7 +206,7 @@
 				"order" : 117,
 				"text" : "Top Label",
 				"type" : "textinput",
-				"value" : "nguyendevs đã tham gia server Trái Đất"
+				"value" : "nguyendevs has joined the Earth server"
 			},
 			"timertotallabel" : 
 			{
@@ -269,7 +215,7 @@
 				"order" : 118,
 				"text" : "Total Seconds",
 				"type" : "textinput",
-				"value" : "TỔNG SỐ GIÂY ĐÃ CHƠI"
+				"value" : "TOTAL SECONDS PLAYED"
 			},
 			"yearlabeltext" : 
 			{
@@ -278,7 +224,61 @@
 				"order" : 119,
 				"text" : "Year Label",
 				"type" : "textinput",
-				"value" : "Năm thứ"
+				"value" : "Year"
+			},
+			"label_year" : 
+			{
+				"group" : "group_text",
+				"index" : 20,
+				"order" : 120,
+				"text" : "Year",
+				"type" : "textinput",
+				"value" : "Year"
+			},
+			"label_month" : 
+			{
+				"group" : "group_text",
+				"index" : 21,
+				"order" : 121,
+				"text" : "Month",
+				"type" : "textinput",
+				"value" : "Month"
+			},
+			"label_day" : 
+			{
+				"group" : "group_text",
+				"index" : 22,
+				"order" : 122,
+				"text" : "Day",
+				"type" : "textinput",
+				"value" : "Day"
+			},
+			"label_hour" : 
+			{
+				"group" : "group_text",
+				"index" : 23,
+				"order" : 123,
+				"text" : "Hour",
+				"type" : "textinput",
+				"value" : "Hour"
+			},
+			"label_minute" : 
+			{
+				"group" : "group_text",
+				"index" : 24,
+				"order" : 124,
+				"text" : "Minute",
+				"type" : "textinput",
+				"value" : "Minute"
+			},
+			"label_second" : 
+			{
+				"group" : "group_text",
+				"index" : 25,
+				"order" : 125,
+				"text" : "Second",
+				"type" : "textinput",
+				"value" : "Second"
 			}
 		}
 	},
