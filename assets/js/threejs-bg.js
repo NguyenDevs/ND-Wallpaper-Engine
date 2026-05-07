@@ -305,6 +305,10 @@
         { r1: 4.2, r2: 5.0, d: 0.8, s: -0.004, a: new THREE.Vector3(-0.5, 1, 0.5), skip: [{skip:1,prob:30},{skip:0,prob:70}] },
         { r1: 5.6, r2: 6.6, d: 1.2, s: 0.003, a: new THREE.Vector3(0.2, -0.5, 1), skip: [{skip:1,prob:30},{skip:2,prob:20},{skip:0,prob:50}] },
         { r1: 7.2, r2: 8.4, d: 1.4, s: -0.002, a: new THREE.Vector3(0.5, 0.8, -0.3), skip: [{skip:1,prob:30},{skip:2,prob:20},{skip:3,prob:10},{skip:0,prob:40}] },
+        { r1: 8.8, r2: 10.2, d: 1.6, s: 0.001, a: new THREE.Vector3(0.1, 1, 0.4), skip: [{skip:1,prob:30},{skip:2,prob:10},{skip:0,prob:60}] },
+        { r1: 10.6, r2: 12.2, d: 1.8, s: -0.005, a: new THREE.Vector3(0.8, 0.2, 1), skip: [{skip:1,prob:30},{skip:2,prob:10},{skip:0,prob:60}] },
+        { r1: 12.6, r2: 14.4, d: 2.0, s: 0.006, a: new THREE.Vector3(-1, -0.5, 0.3), skip: [{skip:1,prob:30},{skip:2,prob:10},{skip:0,prob:60}] },
+        { r1: 14.8, r2: 16.8, d: 2.2, s: -0.003, a: new THREE.Vector3(0.3, -1, 0.6), skip: [{skip:1,prob:30},{skip:2,prob:10},{skip:0,prob:60}] }
       ];
       rings = [];
       for (let i = 0; i < amount; i++) {
