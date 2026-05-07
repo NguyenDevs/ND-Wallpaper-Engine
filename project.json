@@ -1,209 +1,295 @@
 {
-	"description" : "NguyenDevs Profile Wallpaper - End Sky & Three.js",
+	"contentrating" : "Everyone",
+	"description" : "NguyenDevs' Armillary Sphere & Counting Life Clock",
 	"file" : "index.html",
 	"general" : 
 	{
 		"properties" : 
 		{
+			"birthdate" : 
+			{
+				"group" : "group_clock",
+				"index" : 12,
+				"order" : 112,
+				"text" : "Birth Date",
+				"type" : "textinput",
+				"value" : "2004-07-04T09:00:00+07:00"
+			},
+			"clockblur" : 
+			{
+				"group" : "group_clock",
+				"index" : 15,
+				"max" : 50,
+				"min" : 0,
+				"order" : 115,
+				"step" : 1,
+				"text" : "Background Blur (px)",
+				"type" : "slider",
+				"value" : 2
+			},
+			"clockoffsetx" : 
+			{
+				"group" : "group_clock",
+				"index" : 13,
+				"max" : 100,
+				"min" : 0,
+				"order" : 113,
+				"step" : 1,
+				"text" : "Clock Horizontal Position (%)",
+				"type" : "slider",
+				"value" : 5
+			},
+			"clockoffsety" : 
+			{
+				"group" : "group_clock",
+				"index" : 14,
+				"max" : 100,
+				"min" : 0,
+				"order" : 114,
+				"step" : 1,
+				"text" : "Clock Vertical Position (%)",
+				"type" : "slider",
+				"value" : 50
+			},
+			"corebrightness" : 
+			{
+				"group" : "group_core",
+				"index" : 1,
+				"max" : 3,
+				"min" : 0.1,
+				"order" : 101,
+				"step" : 0.05,
+				"text" : "Brightness",
+				"type" : "slider",
+				"value" : 0.5
+			},
+			"coreoffsetx" : 
+			{
+				"group" : "group_core",
+				"index" : 4,
+				"max" : 20,
+				"min" : -20,
+				"order" : 104,
+				"step" : 0.1,
+				"text" : "Horizontal Position",
+				"type" : "slider",
+				"value" : -5
+			},
+			"coreoffsety" : 
+			{
+				"group" : "group_core",
+				"index" : 5,
+				"max" : 10,
+				"min" : -10,
+				"order" : 105,
+				"step" : 0.1,
+				"text" : "Vertical Position",
+				"type" : "slider",
+				"value" : 0
+			},
+			"corespeed" : 
+			{
+				"group" : "group_core",
+				"index" : 2,
+				"max" : 4,
+				"min" : 0,
+				"order" : 102,
+				"step" : 0.05,
+				"text" : "Speed",
+				"type" : "slider",
+				"value" : 1
+			},
+			"corezoom" : 
+			{
+				"group" : "group_core",
+				"index" : 3,
+				"max" : 50,
+				"min" : 5,
+				"order" : 103,
+				"step" : 1,
+				"text" : "Camera Distance",
+				"type" : "slider",
+				"value" : 14
+			},
+			"debrisamount" : 
+			{
+				"group" : "group_core",
+				"index" : 9,
+				"max" : 100,
+				"min" : 0,
+				"order" : 109,
+				"step" : 5,
+				"text" : "Polygons (Debris) Amount",
+				"type" : "slider",
+				"value" : 30
+			},
+			"debrissize" : 
+			{
+				"group" : "group_core",
+				"index" : 10,
+				"max" : 3,
+				"min" : 0.1,
+				"order" : 110,
+				"step" : 0.1,
+				"text" : "Polygons Size Multiplier",
+				"type" : "slider",
+				"value" : 1
+			},
+			"group_clock" : 
+			{
+				"index" : 11,
+				"order" : 111,
+				"text" : "Clock & UI Settings",
+				"type" : "group"
+			},
+			"group_core" : 
+			{
+				"index" : 0,
+				"order" : 100,
+				"text" : "Core Settings",
+				"type" : "group"
+			},
+			"group_text" : 
+			{
+				"index" : 16,
+				"order" : 116,
+				"text" : "Label Settings",
+				"type" : "group"
+			},
+			"label_day" : 
+			{
+				"group" : "group_text",
+				"index" : 22,
+				"order" : 122,
+				"text" : "Day",
+				"type" : "textinput",
+				"value" : "Ngày"
+			},
+			"label_hour" : 
+			{
+				"group" : "group_text",
+				"index" : 23,
+				"order" : 123,
+				"text" : "Hour",
+				"type" : "textinput",
+				"value" : "Giờ"
+			},
+			"label_minute" : 
+			{
+				"group" : "group_text",
+				"index" : 24,
+				"order" : 124,
+				"text" : "Minute",
+				"type" : "textinput",
+				"value" : "Phút"
+			},
+			"label_month" : 
+			{
+				"group" : "group_text",
+				"index" : 21,
+				"order" : 121,
+				"text" : "Month",
+				"type" : "textinput",
+				"value" : "Tháng"
+			},
+			"label_second" : 
+			{
+				"group" : "group_text",
+				"index" : 25,
+				"order" : 125,
+				"text" : "Second",
+				"type" : "textinput",
+				"value" : "Giây"
+			},
+			"label_year" : 
+			{
+				"group" : "group_text",
+				"index" : 20,
+				"order" : 120,
+				"text" : "Year",
+				"type" : "textinput",
+				"value" : "Năm"
+			},
+			"particleamount" : 
+			{
+				"group" : "group_core",
+				"index" : 7,
+				"max" : 10000,
+				"min" : 500,
+				"order" : 107,
+				"step" : 500,
+				"text" : "Particle Amount",
+				"type" : "slider",
+				"value" : 4500
+			},
+			"particlesize" : 
+			{
+				"group" : "group_core",
+				"index" : 8,
+				"max" : 0.5,
+				"min" : 0.01,
+				"order" : 108,
+				"step" : 0.01,
+				"text" : "Particle Size",
+				"type" : "slider",
+				"value" : 0.08
+			},
+			"ringamount" : 
+			{
+				"group" : "group_core",
+				"index" : 6,
+				"max" : 8,
+				"min" : 1,
+				"order" : 106,
+				"step" : 1,
+				"text" : "Ring Amount",
+				"type" : "slider",
+				"value" : 4
+			},
 			"schemecolor" : 
 			{
 				"order" : 0,
 				"text" : "ui_browse_properties_scheme_color",
 				"type" : "color",
-				"value" : "0 0 0"
+				"value" : "0.6627450980392157 0.1843137254901961 0.9372549019607843"
 			},
-			"group_core" : { "text" : "Core Settings", "type" : "group", "order" : 1 },
-			"corebrightness" : 
-			{
-				"order" : 2,
-				"text" : "Brightness",
-				"type" : "slider",
-				"min" : 0.1,
-				"max" : 3.0,
-				"step" : 0.05,
-				"value" : 0.5,
-				"group" : "group_core"
-			},
-			"corespeed" : 
-			{
-				"order" : 3,
-				"text" : "Speed",
-				"type" : "slider",
-				"min" : 0,
-				"max" : 4.0,
-				"step" : 0.05,
-				"value" : 1.0,
-				"group" : "group_core"
-			},
-			"corezoom" : 
-			{
-				"order" : 4,
-				"text" : "Camera Distance",
-				"type" : "slider",
-				"min" : 5,
-				"max" : 50,
-				"step" : 1,
-				"value" : 14,
-				"group" : "group_core"
-			},
-			"coreoffsetx" : 
-			{
-				"order" : 5,
-				"text" : "Horizontal Position",
-				"type" : "slider",
-				"min" : -20,
-				"max" : 20,
-				"step" : 0.1,
-				"value" : -5,
-				"group" : "group_core"
-			},
-			"coreoffsety" : 
-			{
-				"order" : 6,
-				"text" : "Vertical Position",
-				"type" : "slider",
-				"min" : -10,
-				"max" : 10,
-				"step" : 0.1,
-				"value" : 0,
-				"group" : "group_core"
-			},
-			"ringamount" : 
-			{
-				"order" : 7,
-				"text" : "Ring Amount",
-				"type" : "slider",
-				"min" : 1,
-				"max" : 8,
-				"step" : 1,
-				"value" : 4,
-				"group" : "group_core"
-			},
-			"particleamount" : 
-			{
-				"order" : 8,
-				"text" : "Particle Amount",
-				"type" : "slider",
-				"min" : 500,
-				"max" : 10000,
-				"step" : 500,
-				"value" : 4500,
-				"group" : "group_core"
-			},
-			"particlesize" : 
-			{
-				"order" : 9,
-				"text" : "Particle Size",
-				"type" : "slider",
-				"min" : 0.01,
-				"max" : 0.5,
-				"step" : 0.01,
-				"value" : 0.08,
-				"group" : "group_core"
-			},
-			"debrisamount" : 
-			{
-				"order" : 10,
-				"text" : "Polygons (Debris) Amount",
-				"type" : "slider",
-				"min" : 0,
-				"max" : 100,
-				"step" : 5,
-				"value" : 30,
-				"group" : "group_core"
-			},
-			"debrissize" : 
-			{
-				"order" : 11,
-				"text" : "Polygons Size Multiplier",
-				"type" : "slider",
-				"min" : 0.1,
-				"max" : 3.0,
-				"step" : 0.1,
-				"value" : 1.0,
-				"group" : "group_core"
-			},
-
-			"group_clock" : { "text" : "Clock & UI Settings", "type" : "group", "order" : 20 },
-			"birthdate" : 
-			{
-				"order" : 21,
-				"text" : "Birth Date",
-				"type" : "textinput",
-				"value" : "2004-07-04T09:00:00+07:00",
-				"group" : "group_clock"
-			},
-			"clockoffsetx" : 
-			{
-				"order" : 22,
-				"text" : "Clock Horizontal Position (%)",
-				"type" : "slider",
-				"min" : 0,
-				"max" : 100,
-				"step" : 1,
-				"value" : 5,
-				"group" : "group_clock"
-			},
-			"clockoffsety" : 
-			{
-				"order" : 23,
-				"text" : "Clock Vertical Position (%)",
-				"type" : "slider",
-				"min" : 0,
-				"max" : 100,
-				"step" : 1,
-				"value" : 50,
-				"group" : "group_clock"
-			},
-			"clockblur" : 
-			{
-				"order" : 24,
-				"text" : "Background Blur (px)",
-				"type" : "slider",
-				"min" : 0,
-				"max" : 50,
-				"step" : 1,
-				"value" : 2,
-				"group" : "group_clock"
-			},
-
-			"group_text" : { "text" : "Label Settings", "type" : "group", "order" : 30 },
 			"timerlabeltop" : 
 			{
-				"order" : 31,
-				"text" : "Top Label Text",
+				"group" : "group_text",
+				"index" : 17,
+				"order" : 117,
+				"text" : "Top Label",
 				"type" : "textinput",
-				"value" : "nguyendevs đã tham gia server Trái Đất",
-				"group" : "group_text"
+				"value" : "nguyendevs đã tham gia server Trái Đất"
 			},
 			"timertotallabel" : 
 			{
-				"order" : 32,
-				"text" : "Total Seconds Label",
+				"group" : "group_text",
+				"index" : 18,
+				"order" : 118,
+				"text" : "Total Seconds",
 				"type" : "textinput",
-				"value" : "TỔNG SỐ GIÂY ĐÃ CHƠI",
-				"group" : "group_text"
+				"value" : "TỔNG SỐ GIÂY ĐÃ CHƠI"
 			},
 			"yearlabeltext" : 
 			{
-				"order" : 33,
-				"text" : "Year Label Prefix",
+				"group" : "group_text",
+				"index" : 19,
+				"order" : 119,
+				"text" : "Year Label",
 				"type" : "textinput",
-				"value" : "Năm thứ",
-				"group" : "group_text"
-			},
-			"label_year" : { "order" : 34, "text" : "Label: Year", "type" : "textinput", "value" : "Năm", "group" : "group_text" },
-			"label_month" : { "order" : 35, "text" : "Label: Month", "type" : "textinput", "value" : "Tháng", "group" : "group_text" },
-			"label_day" : { "order" : 36, "text" : "Label: Day", "type" : "textinput", "value" : "Ngày", "group" : "group_text" },
-			"label_hour" : { "order" : 37, "text" : "Label: Hour", "type" : "textinput", "value" : "Giờ", "group" : "group_text" },
-			"label_minute" : { "order" : 38, "text" : "Label: Minute", "type" : "textinput", "value" : "Phút", "group" : "group_text" },
-			"label_second" : { "order" : 39, "text" : "Label: Second", "type" : "textinput", "value" : "Giây", "group" : "group_text" }
+				"value" : "Năm thứ"
+			}
 		}
 	},
 	"menu" : "settings",
-	"preview" : "preview.jpg",
-	"title" : "NguyenDevs - End Sky Wallpaper",
+	"preview" : "preview.gif",
+	"ratingsex" : "none",
+	"ratingviolence" : "none",
+	"tags" : [ "Abstract" ],
+	"title" : "NguyenDevs - Armillary Sphere Wallpaper",
 	"type" : "web",
+	"version" : 0,
 	"visibility" : "public",
 	"workshopid" : "0"
 }
