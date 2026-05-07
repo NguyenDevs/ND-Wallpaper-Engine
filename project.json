@@ -1,0 +1,209 @@
+{
+	"description" : "NguyenDevs Profile Wallpaper - End Sky & Three.js",
+	"file" : "index.html",
+	"general" : 
+	{
+		"properties" : 
+		{
+			"schemecolor" : 
+			{
+				"order" : 0,
+				"text" : "ui_browse_properties_scheme_color",
+				"type" : "color",
+				"value" : "0 0 0"
+			},
+			"group_core" : { "text" : "Core Settings", "type" : "group", "order" : 1 },
+			"corebrightness" : 
+			{
+				"order" : 2,
+				"text" : "Brightness",
+				"type" : "slider",
+				"min" : 0.1,
+				"max" : 3.0,
+				"step" : 0.05,
+				"value" : 0.5,
+				"group" : "group_core"
+			},
+			"corespeed" : 
+			{
+				"order" : 3,
+				"text" : "Speed",
+				"type" : "slider",
+				"min" : 0,
+				"max" : 4.0,
+				"step" : 0.05,
+				"value" : 1.0,
+				"group" : "group_core"
+			},
+			"corezoom" : 
+			{
+				"order" : 4,
+				"text" : "Camera Distance",
+				"type" : "slider",
+				"min" : 5,
+				"max" : 50,
+				"step" : 1,
+				"value" : 14,
+				"group" : "group_core"
+			},
+			"coreoffsetx" : 
+			{
+				"order" : 5,
+				"text" : "Horizontal Position",
+				"type" : "slider",
+				"min" : -20,
+				"max" : 20,
+				"step" : 0.1,
+				"value" : -5,
+				"group" : "group_core"
+			},
+			"coreoffsety" : 
+			{
+				"order" : 6,
+				"text" : "Vertical Position",
+				"type" : "slider",
+				"min" : -10,
+				"max" : 10,
+				"step" : 0.1,
+				"value" : 0,
+				"group" : "group_core"
+			},
+			"ringamount" : 
+			{
+				"order" : 7,
+				"text" : "Ring Amount",
+				"type" : "slider",
+				"min" : 1,
+				"max" : 8,
+				"step" : 1,
+				"value" : 4,
+				"group" : "group_core"
+			},
+			"particleamount" : 
+			{
+				"order" : 8,
+				"text" : "Particle Amount",
+				"type" : "slider",
+				"min" : 500,
+				"max" : 10000,
+				"step" : 500,
+				"value" : 4500,
+				"group" : "group_core"
+			},
+			"particlesize" : 
+			{
+				"order" : 9,
+				"text" : "Particle Size",
+				"type" : "slider",
+				"min" : 0.01,
+				"max" : 0.5,
+				"step" : 0.01,
+				"value" : 0.08,
+				"group" : "group_core"
+			},
+			"debrisamount" : 
+			{
+				"order" : 10,
+				"text" : "Polygons (Debris) Amount",
+				"type" : "slider",
+				"min" : 0,
+				"max" : 100,
+				"step" : 5,
+				"value" : 30,
+				"group" : "group_core"
+			},
+			"debrissize" : 
+			{
+				"order" : 11,
+				"text" : "Polygons Size Multiplier",
+				"type" : "slider",
+				"min" : 0.1,
+				"max" : 3.0,
+				"step" : 0.1,
+				"value" : 1.0,
+				"group" : "group_core"
+			},
+
+			"group_clock" : { "text" : "Clock & UI Settings", "type" : "group", "order" : 20 },
+			"birthdate" : 
+			{
+				"order" : 21,
+				"text" : "Birth Date",
+				"type" : "textinput",
+				"value" : "2004-07-04T09:00:00+07:00",
+				"group" : "group_clock"
+			},
+			"clockoffsetx" : 
+			{
+				"order" : 22,
+				"text" : "Clock Horizontal Position (%)",
+				"type" : "slider",
+				"min" : 0,
+				"max" : 100,
+				"step" : 1,
+				"value" : 5,
+				"group" : "group_clock"
+			},
+			"clockoffsety" : 
+			{
+				"order" : 23,
+				"text" : "Clock Vertical Position (%)",
+				"type" : "slider",
+				"min" : 0,
+				"max" : 100,
+				"step" : 1,
+				"value" : 50,
+				"group" : "group_clock"
+			},
+			"clockblur" : 
+			{
+				"order" : 24,
+				"text" : "Background Blur (px)",
+				"type" : "slider",
+				"min" : 0,
+				"max" : 50,
+				"step" : 1,
+				"value" : 2,
+				"group" : "group_clock"
+			},
+
+			"group_text" : { "text" : "Label Settings", "type" : "group", "order" : 30 },
+			"timerlabeltop" : 
+			{
+				"order" : 31,
+				"text" : "Top Label Text",
+				"type" : "textinput",
+				"value" : "nguyendevs đã tham gia server Trái Đất",
+				"group" : "group_text"
+			},
+			"timertotallabel" : 
+			{
+				"order" : 32,
+				"text" : "Total Seconds Label",
+				"type" : "textinput",
+				"value" : "TỔNG SỐ GIÂY ĐÃ CHƠI",
+				"group" : "group_text"
+			},
+			"yearlabeltext" : 
+			{
+				"order" : 33,
+				"text" : "Year Label Prefix",
+				"type" : "textinput",
+				"value" : "Năm thứ",
+				"group" : "group_text"
+			},
+			"label_year" : { "order" : 34, "text" : "Label: Year", "type" : "textinput", "value" : "Năm", "group" : "group_text" },
+			"label_month" : { "order" : 35, "text" : "Label: Month", "type" : "textinput", "value" : "Tháng", "group" : "group_text" },
+			"label_day" : { "order" : 36, "text" : "Label: Day", "type" : "textinput", "value" : "Ngày", "group" : "group_text" },
+			"label_hour" : { "order" : 37, "text" : "Label: Hour", "type" : "textinput", "value" : "Giờ", "group" : "group_text" },
+			"label_minute" : { "order" : 38, "text" : "Label: Minute", "type" : "textinput", "value" : "Phút", "group" : "group_text" },
+			"label_second" : { "order" : 39, "text" : "Label: Second", "type" : "textinput", "value" : "Giây", "group" : "group_text" }
+		}
+	},
+	"menu" : "settings",
+	"preview" : "preview.jpg",
+	"title" : "NguyenDevs - End Sky Wallpaper",
+	"type" : "web",
+	"visibility" : "public",
+	"workshopid" : "0"
+}
