@@ -115,6 +115,7 @@
       musicSensitive: 50,
       musicStyle: "tectonic"
     };
+    window._wallpaperAudioData = new Array(128).fill(0);
   </script>
 
   <script src="assets/js/threejs-bg.js"></script>
@@ -208,7 +209,11 @@
     };
 
     window.wallpaperRegisterAudioListener(function(audioData) {
-        window._wallpaperAudioData = audioData;
+        const combined = new Array(64);
+        for (let i = 0; i < 64; i++) {
+            combined[i] = Math.max(audioData[i], audioData[i + 64]);
+        }
+        window._wallpaperAudioData = combined;
     });
   </script>
 
