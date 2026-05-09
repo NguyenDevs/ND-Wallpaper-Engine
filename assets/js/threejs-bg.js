@@ -396,6 +396,10 @@
       canvas.style.cursor = 'grabbing';
       autoRotate = false; clearTimeout(autoRotateTimeout);
     });
+    window.addEventListener('mouseup', () => {
+      drag.active = false; canvas.style.cursor = 'grab';
+      autoRotateTimeout = setTimeout(() => autoRotate = true, 3000);
+    });
     window.addEventListener('mousemove', e => {
       const cfg = window.wallpaperConfig || {};
       const canDrag = cfg.mouseDrag ?? true;
@@ -484,8 +488,8 @@
       camera.updateProjectionMatrix();
 
       const weight = cfg.mouseWeight ?? 50;
-      const sens = 0.01 * (1.1 - weight / 100);
-      const damp = 0.95 + (weight / 100) * 0.045;
+      const sens = 0.012 * (1.05 - weight / 100);
+      const damp = 0.94 + (weight / 100) * 0.056;
 
       if (!drag.active) {
         const speed = Math.sqrt(velocity.x*velocity.x + velocity.y*velocity.y);
