@@ -107,7 +107,10 @@
       debrisAmount: 30,
       debrisSize: 1.0,
       birthDate: "2004-07-04T09:00:00+07:00",
-      yearLabelText: "Năm thứ"
+      yearLabelText: "Năm thứ",
+      mouseDrag: true,
+      mouseFollow: false,
+      mouseWeight: 50
     };
   </script>
 
@@ -170,6 +173,10 @@
         if (properties.particlesize) { window.wallpaperConfig.particleSize = properties.particlesize.value; window.dispatchEvent(new CustomEvent('threejs-update', {detail: {type:'particlesize'}})); }
         if (properties.debrisamount) { window.wallpaperConfig.debrisAmount = properties.debrisamount.value; window.dispatchEvent(new CustomEvent('threejs-update', {detail: {type:'debris'}})); }
         if (properties.debrissize) { window.wallpaperConfig.debrisSize = properties.debrissize.value; window.dispatchEvent(new CustomEvent('threejs-update', {detail: {type:'debrissize'}})); }
+        
+        if (properties.mousedrag) window.wallpaperConfig.mouseDrag = properties.mousedrag.value;
+        if (properties.mousefollow) window.wallpaperConfig.mouseFollow = properties.mousefollow.value;
+        if (properties.mouseweight) window.wallpaperConfig.mouseWeight = properties.mouseweight.value;
         
         if (properties.birthdate) { window.wallpaperConfig.birthDate = properties.birthdate.value; updateLivedTime(); }
         if (properties.timerlabeltop) document.getElementById('cfg-label-top').textContent = properties.timerlabeltop.value;
