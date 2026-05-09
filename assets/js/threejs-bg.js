@@ -539,20 +539,24 @@
         const idx = i * 3, bx = basePos[idx], by = basePos[idx+1], bz = basePos[idx+2];
         const theta = thetaArr[i], phi = phiArr[i];
         
-        if (musicEnable && audio) {
+        if (musicEnable) {
           let m = 0;
-          if (musicStyle === 'tectonic') {
-            const aIdx = Math.floor(Math.abs(theta / Math.PI) * 63) % 64;
-            m = audio[aIdx] * musicSensitive * 1.5;
-            const tectonic = Math.sin(6 * theta) * Math.cos(6 * phi);
-            m *= (tectonic > 0.3 ? 1.2 : 0.8);
-          } else if (musicStyle === 'wave') {
-            const aIdx = Math.floor(Math.abs(bx + 1.4) / 2.8 * 63) % 64;
-            m = audio[aIdx] * musicSensitive * 1.2 * Math.sin(theta * 2 + t * 2);
-          } else if (musicStyle === 'ripple') {
-            const dist = Math.sqrt(bx*bx + by*by + bz*bz);
-            const aIdx = Math.floor((1 - phi / Math.PI) * 63) % 64;
-            m = audio[aIdx] * musicSensitive * 1.5 * Math.sin(10 * phi - t * 5);
+          if (audio) {
+            if (musicStyle === 'tectonic') {
+              const aIdx = Math.floor(Math.abs(theta / Math.PI) * 63) % 64;
+              const val = Math.pow(audio[aIdx], 1.2);
+              m = val * musicSensitive * 8.0;
+              const tectonic = Math.sin(6 * theta) * Math.cos(6 * phi);
+              m *= (tectonic > 0.3 ? 1.5 : 0.8);
+            } else if (musicStyle === 'wave') {
+              const aIdx = Math.floor(Math.abs(bx + 1.4) / 2.8 * 63) % 64;
+              const val = Math.pow(audio[aIdx], 1.2);
+              m = val * musicSensitive * 7.0 * Math.sin(theta * 2 + t * 2);
+            } else if (musicStyle === 'ripple') {
+              const aIdx = Math.floor((1 - phi / Math.PI) * 63) % 64;
+              const val = Math.pow(audio[aIdx], 1.2);
+              m = val * musicSensitive * 9.0 * Math.sin(10 * phi - t * 5);
+            }
           }
           positions[idx] = bx * (1 + m);
           positions[idx+1] = by * (1 + m);
