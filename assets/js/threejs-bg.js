@@ -396,10 +396,6 @@
       canvas.style.cursor = 'grabbing';
       autoRotate = false; clearTimeout(autoRotateTimeout);
     });
-    window.addEventListener('mouseup', () => {
-      drag.active = false; canvas.style.cursor = 'grab';
-      autoRotateTimeout = setTimeout(() => autoRotate = true, 3000);
-    });
     window.addEventListener('mousemove', e => {
       const cfg = window.wallpaperConfig || {};
       const canDrag = cfg.mouseDrag ?? true;
@@ -407,21 +403,22 @@
       const weight = cfg.mouseWeight ?? 50;
       const sens = 0.01 * (1.1 - weight / 100);
 
-      if (drag.active && canDrag) {
-        const dx = e.clientX - drag.px, dy = e.clientY - drag.py;
+      const dx = e.clientX - (drag.px || e.clientX), dy = e.clientY - (drag.py || e.clientY);
+      
+      if ((drag.active && canDrag) || follow) {
         velocity.x = dx; velocity.y = dy;
         const speed = Math.sqrt(dx*dx+dy*dy);
-        if (speed > 0) rotQ.premultiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(dy, dx, 0).normalize(), speed * sens));
-        drag.px = e.clientX; drag.py = e.clientY;
-      } else if (follow) {
-        const dx = e.clientX - (drag.px || e.clientX), dy = e.clientY - (drag.py || e.clientY);
-        velocity.x = dx; velocity.y = dy;
-        const speed = Math.sqrt(dx*dx+dy*dy);
-        if (speed > 0) rotQ.premultiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(dy, dx, 0).normalize(), speed * sens * 0.5));
-        drag.px = e.clientX; drag.py = e.clientY;
-        autoRotate = false; clearTimeout(autoRotateTimeout);
-        autoRotateTimeout = setTimeout(() => autoRotate = true, 3000);
+        
+        if (drag.active && canDrag) {
+          if (speed > 0) rotQ.premultiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(dy, dx, 0).normalize(), speed * sens));
+        }
+        
+        if (follow) {
+          autoRotate = false; clearTimeout(autoRotateTimeout);
+          autoRotateTimeout = setTimeout(() => autoRotate = true, 3000);
+        }
       }
+      drag.px = e.clientX; drag.py = e.clientY;
     });
     window.addEventListener('wheel', e => {
       if (manualZoom === null) manualZoom = window.wallpaperConfig?.zoom ?? 18;
