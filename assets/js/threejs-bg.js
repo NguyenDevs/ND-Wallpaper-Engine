@@ -535,33 +535,40 @@
       const musicStyle = cfg.musicStyle ?? 'tectonic';
       const audio = window._wallpaperAudioData;
       const hasAudio = audio && audio.length > 0;
+      
+      if (musicEnable && hasAudio) {
+        const peak = Math.max(...audio);
+        if (peak > 0.001) console.log('Audio Peak:', peak.toFixed(3));
+      }
 
       for (let i = 0; i < N; i++) {
         const idx = i * 3, bx = basePos[idx], by = basePos[idx+1], bz = basePos[idx+2];
         const theta = thetaArr[i], phi = phiArr[i];
         
         if (musicEnable) {
-          let m = 0;
+          let r = 1.0;
           if (hasAudio) {
-            if (musicStyle === 'tectonic') {
-              const aIdx = Math.floor(Math.abs(theta / Math.PI) * 63) % 64;
-              const val = Math.pow(audio[aIdx], 1.2);
-              m = val * musicSensitive * 8.0;
+            let audioIntensity = 0;
+            // Average the bass frequencies (0-15) for a more stable and energetic pulse
+            for (let j = 0; j < 16; j++) audioIntensity += audio[j];
+            audioIntensity = (audioIntensity / 16) * musicSensitive * 6.0;
+
+            const style = (musicStyle || 'tectonic').toLowerCase();
+            if (style === 'tectonic') {
               const tectonic = Math.sin(6 * theta) * Math.cos(6 * phi);
-              m *= (tectonic > 0.3 ? 1.5 : 0.8);
-            } else if (musicStyle === 'wave') {
-              const aIdx = Math.floor(Math.abs(bx + 1.4) / 2.8 * 63) % 64;
-              const val = Math.pow(audio[aIdx], 1.2);
-              m = val * musicSensitive * 7.0 * Math.sin(theta * 2 + t * 2);
-            } else if (musicStyle === 'ripple') {
-              const aIdx = Math.floor((1 - phi / Math.PI) * 63) % 64;
-              const val = Math.pow(audio[aIdx], 1.2);
-              m = val * musicSensitive * 9.0 * Math.sin(10 * phi - t * 5);
+              const dr = (tectonic > 0.3 ? 0.6 : (tectonic < -0.3 ? -0.2 : 0));
+              r = 1.0 + dr * audioIntensity;
+            } else if (style === 'wave') {
+              const dr = 0.5 * Math.sin(3 * theta - t * 1.5) + 0.3 * Math.cos(4 * phi + t);
+              r = 1.0 + dr * audioIntensity;
+            } else if (style === 'ripple') {
+              const dr = 0.4 * Math.sin(8 * theta + t * 2) * Math.cos(t * 1.2) + 0.2 * Math.sin(phi * 6);
+              r = 1.0 + dr * audioIntensity;
             }
           }
-          positions[idx] = bx * (1 + m);
-          positions[idx+1] = by * (1 + m);
-          positions[idx+2] = bz * (1 + m);
+          positions[idx] = bx * r;
+          positions[idx+1] = by * r;
+          positions[idx+2] = bz * r;
         } else {
           const tectonic = Math.sin(6 * theta) * Math.cos(6 * phi);
           const r1 = 1.0 + (tectonic > 0.3 ? 0.15 : (tectonic < -0.3 ? -0.1 : 0));
