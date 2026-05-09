@@ -4,7 +4,7 @@
 	"file" : "index.html",
 	"general" : 
 	{
-		"supportsaudio" : true,
+		"supportsaudioprocessing" : true,
 		"properties" : 
 		{
 			"schemecolor" : 
