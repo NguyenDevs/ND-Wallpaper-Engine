@@ -110,7 +110,10 @@
       yearLabelText: "Năm thứ",
       mouseDrag: true,
       mouseFollow: false,
-      mouseWeight: 50
+      mouseWeight: 50,
+      musicEnable: false,
+      musicSensitive: 50,
+      musicStyle: "tectonic"
     };
   </script>
 
@@ -178,6 +181,10 @@
         if (properties.mousefollow) window.wallpaperConfig.mouseFollow = properties.mousefollow.value;
         if (properties.mouseweight) window.wallpaperConfig.mouseWeight = properties.mouseweight.value;
         
+        if (properties.musicenable) window.wallpaperConfig.musicEnable = properties.musicenable.value;
+        if (properties.musicsensitive) window.wallpaperConfig.musicSensitive = properties.musicsensitive.value;
+        if (properties.musicstyle) window.wallpaperConfig.musicStyle = properties.musicstyle.value;
+        
         if (properties.birthdate) { window.wallpaperConfig.birthDate = properties.birthdate.value; updateLivedTime(); }
         if (properties.timerlabeltop) document.getElementById('cfg-label-top').textContent = properties.timerlabeltop.value;
         if (properties.timertotallabel) document.getElementById('cfg-label-total').textContent = properties.timertotallabel.value;
@@ -199,6 +206,10 @@
         });
       }
     };
+
+    window.wallpaperRegisterAudioListener(function(audioData) {
+        window._wallpaperAudioData = audioData;
+    });
   </script>
 
 </body>
