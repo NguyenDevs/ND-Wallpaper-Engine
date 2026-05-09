@@ -279,6 +279,43 @@
 				"text" : "Second",
 				"type" : "textinput",
 				"value" : "Second"
+			},
+			"group_mouse" : 
+			{
+				"index" : 26,
+				"order" : 126,
+				"text" : "Mouse Settings",
+				"type" : "group"
+			},
+			"mousedrag" : 
+			{
+				"group" : "group_mouse",
+				"index" : 27,
+				"order" : 127,
+				"text" : "Drag",
+				"type" : "bool",
+				"value" : true
+			},
+			"mousefollow" : 
+			{
+				"group" : "group_mouse",
+				"index" : 28,
+				"order" : 128,
+				"text" : "Follow Mouse",
+				"type" : "bool",
+				"value" : false
+			},
+			"mouseweight" : 
+			{
+				"group" : "group_mouse",
+				"index" : 29,
+				"max" : 100,
+				"min" : 1,
+				"order" : 129,
+				"step" : 1,
+				"text" : "Weight",
+				"type" : "slider",
+				"value" : 50
 			}
 		}
 	},
