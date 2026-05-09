@@ -534,6 +534,7 @@
       const musicSensitive = (cfg.musicSensitive ?? 50) / 100;
       const musicStyle = cfg.musicStyle ?? 'tectonic';
       const audio = window._wallpaperAudioData;
+      const hasAudio = audio && audio.length > 0;
 
       for (let i = 0; i < N; i++) {
         const idx = i * 3, bx = basePos[idx], by = basePos[idx+1], bz = basePos[idx+2];
@@ -541,7 +542,7 @@
         
         if (musicEnable) {
           let m = 0;
-          if (audio) {
+          if (hasAudio) {
             if (musicStyle === 'tectonic') {
               const aIdx = Math.floor(Math.abs(theta / Math.PI) * 63) % 64;
               const val = Math.pow(audio[aIdx], 1.2);
