@@ -390,6 +390,8 @@
     const _q = new THREE.Quaternion();
 
     canvas.addEventListener('mousedown', e => {
+      const cfg = window.wallpaperConfig || {};
+      if (!(cfg.mouseDrag ?? true)) return;
       drag.active = true; drag.px = e.clientX; drag.py = e.clientY;
       canvas.style.cursor = 'grabbing';
       autoRotate = false; clearTimeout(autoRotateTimeout);
@@ -399,12 +401,26 @@
       autoRotateTimeout = setTimeout(() => autoRotate = true, 3000);
     });
     window.addEventListener('mousemove', e => {
-      if (drag.active) {
+      const cfg = window.wallpaperConfig || {};
+      const canDrag = cfg.mouseDrag ?? true;
+      const follow = cfg.mouseFollow ?? false;
+      const weight = cfg.mouseWeight ?? 50;
+      const sens = 0.01 * (1.1 - weight / 100);
+
+      if (drag.active && canDrag) {
         const dx = e.clientX - drag.px, dy = e.clientY - drag.py;
         velocity.x = dx; velocity.y = dy;
         const speed = Math.sqrt(dx*dx+dy*dy);
-        if (speed > 0) rotQ.premultiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(dy, dx, 0).normalize(), speed*0.005));
+        if (speed > 0) rotQ.premultiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(dy, dx, 0).normalize(), speed * sens));
         drag.px = e.clientX; drag.py = e.clientY;
+      } else if (follow) {
+        const dx = e.clientX - (drag.px || e.clientX), dy = e.clientY - (drag.py || e.clientY);
+        velocity.x = dx; velocity.y = dy;
+        const speed = Math.sqrt(dx*dx+dy*dy);
+        if (speed > 0) rotQ.premultiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(dy, dx, 0).normalize(), speed * sens * 0.5));
+        drag.px = e.clientX; drag.py = e.clientY;
+        autoRotate = false; clearTimeout(autoRotateTimeout);
+        autoRotateTimeout = setTimeout(() => autoRotate = true, 3000);
       }
     });
     window.addEventListener('wheel', e => {
@@ -416,10 +432,11 @@
     let initialPinchDist = null;
 
     canvas.addEventListener('touchstart', e => {
+      const cfg = window.wallpaperConfig || {};
       if (e.touches.length === 2) {
         initialPinchDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
         drag.active = false;
-      } else {
+      } else if (cfg.mouseDrag ?? true) {
         lastT = e.touches[0];
         drag.active = true;
       }
@@ -428,18 +445,22 @@
     }, { passive: true });
 
     canvas.addEventListener('touchmove', e => {
+      const cfg = window.wallpaperConfig || {};
+      const weight = cfg.mouseWeight ?? 50;
+      const sens = 0.01 * (1.1 - weight / 100);
+
       if (e.touches.length === 2 && initialPinchDist !== null) {
         const dist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
         const delta = dist - initialPinchDist;
-        if (manualZoom === null) manualZoom = window.wallpaperConfig?.zoom ?? 18;
+        if (manualZoom === null) manualZoom = cfg.zoom ?? 18;
         manualZoom = Math.max(5, Math.min(50, manualZoom - delta * 0.05));
         initialPinchDist = dist;
-      } else if (e.touches.length === 1 && lastT) {
+      } else if (e.touches.length === 1 && lastT && (cfg.mouseDrag ?? true)) {
         const t = e.touches[0];
         const dx = t.clientX - lastT.clientX, dy = t.clientY - lastT.clientY;
         velocity.x = dx; velocity.y = dy;
         const speed = Math.sqrt(dx*dx+dy*dy);
-        if (speed > 0) rotQ.premultiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(dy, dx, 0).normalize(), speed*0.005));
+        if (speed > 0) rotQ.premultiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(dy, dx, 0).normalize(), speed * sens));
         lastT = t;
       }
     }, { passive: true });
@@ -465,11 +486,15 @@
       camera.position.y += ((cfg.offsetY ?? 2.0) - camera.position.y) * 0.05;
       camera.updateProjectionMatrix();
 
+      const weight = cfg.mouseWeight ?? 50;
+      const sens = 0.01 * (1.1 - weight / 100);
+      const damp = 0.95 + (weight / 100) * 0.045;
+
       if (!drag.active) {
         const speed = Math.sqrt(velocity.x*velocity.x + velocity.y*velocity.y);
         if (speed > 0.08) {
-          rotQ.premultiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(velocity.y, velocity.x, 0).normalize(), speed*0.005));
-          velocity.x *= 0.98; velocity.y *= 0.98;
+          rotQ.premultiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(velocity.y, velocity.x, 0).normalize(), speed * sens));
+          velocity.x *= damp; velocity.y *= damp;
         }
       } else {
         velocity.x *= 0.5; velocity.y *= 0.5;
