@@ -316,6 +316,58 @@
 				"text" : "Weight",
 				"type" : "slider",
 				"value" : 50
+			},
+			"group_music" : 
+			{
+				"index" : 30,
+				"order" : 130,
+				"text" : "Music Visualizer",
+				"type" : "group"
+			},
+			"musicenable" : 
+			{
+				"group" : "group_music",
+				"index" : 31,
+				"order" : 131,
+				"text" : "Enable",
+				"type" : "bool",
+				"value" : false
+			},
+			"musicsensitive" : 
+			{
+				"group" : "group_music",
+				"index" : 32,
+				"max" : 100,
+				"min" : 1,
+				"order" : 132,
+				"step" : 1,
+				"text" : "Sensitive",
+				"type" : "slider",
+				"value" : 50
+			},
+			"musicstyle" : 
+			{
+				"group" : "group_music",
+				"index" : 33,
+				"options" : 
+				[
+					{
+						"label" : "Tectonic",
+						"value" : "tectonic"
+					},
+					{
+						"label" : "Wave",
+						"value" : "wave"
+					},
+					{
+						"label" : "Ripple",
+						"value" : "ripple"
+					}
+				],
+				"order" : 133,
+				"text" : "Style",
+				"type" : "combo",
+				"value" : "tectonic"
 			}
 		}
 	},
