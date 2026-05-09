@@ -548,10 +548,12 @@
         if (musicEnable) {
           let r = 1.0;
           if (hasAudio) {
-            let audioIntensity = 0;
-            // Average the bass frequencies (0-15) for a more stable and energetic pulse
-            for (let j = 0; j < 16; j++) audioIntensity += audio[j];
-            audioIntensity = (audioIntensity / 16) * musicSensitive * 6.0;
+            let targetIntensity = 0;
+            for (let j = 0; j < 16; j++) targetIntensity += audio[j];
+            targetIntensity = (targetIntensity / 16) * musicSensitive * 6.0;
+            if (!coreGroup.userData.smoothAudioIntensity) coreGroup.userData.smoothAudioIntensity = 0;
+            coreGroup.userData.smoothAudioIntensity += (targetIntensity - coreGroup.userData.smoothAudioIntensity) * 0.15;
+            const audioIntensity = coreGroup.userData.smoothAudioIntensity;
 
             const style = (musicStyle || 'tectonic').toLowerCase();
             if (style === 'tectonic') {
