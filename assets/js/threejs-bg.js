@@ -53,7 +53,7 @@
 
     scene.add(new THREE.AmbientLight(0x150b24, 0.6));
 
-    const coreLight = new THREE.PointLight(0xcc00ff, 5, 25);
+    const coreLight = new THREE.PointLight(0x8800ff, 5, 25);
     coreLight.castShadow = true;
     coreLight.shadow.bias = -0.001;
     const staticGroup = new THREE.Group();
