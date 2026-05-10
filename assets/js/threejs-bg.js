@@ -201,8 +201,8 @@
       const phi = Math.random() * Math.PI * 2;
       const theta = Math.random() * Math.PI;
       const start = new THREE.Vector3().setFromSphericalCoords(1.4, theta, phi);
-      const end = new THREE.Vector3().setFromSphericalCoords(1.4, theta + (Math.random()-0.5)*0.5, phi + (Math.random()-0.5)*0.5);
-      const mid = start.clone().lerp(end, 0.5).normalize().multiplyScalar(1.4 + 0.5 + Math.random() * 0.8);
+      const end = new THREE.Vector3().setFromSphericalCoords(1.4, theta + (Math.random()-0.5)*0.6, phi + (Math.random()-0.5)*0.6);
+      const mid = start.clone().lerp(end, 0.5).normalize().multiplyScalar(1.4 + 0.4 + Math.random() * 0.9);
       return { line, start, mid, end, life: 0, speed: 0.005 + Math.random() * 0.01 };
     }
 
@@ -535,10 +535,30 @@
       const musicStyle = cfg.musicStyle ?? 'tectonic';
       const audio = window._wallpaperAudioData;
       const hasAudio = audio && audio.length > 0;
-      
+      let audioIntensity = 0;
       if (musicEnable && hasAudio) {
-        const peak = Math.max(...audio);
-        if (peak > 0.001) console.log('Audio Peak:', peak.toFixed(3));
+        let bass = 0;
+        for (let j = 0; j < 12; j++) bass += audio[j];
+        bass = (bass / 12) * musicSensitive * 7.0;
+
+        let mid = 0;
+        for (let j = 12; j < 48; j++) mid += audio[j];
+        mid = (mid / 36) * musicSensitive * 3.0;
+
+        const targetIntensity = bass * 0.8 + mid * 0.2;
+        
+        if (coreGroup.userData.smoothAudioIntensity === undefined) coreGroup.userData.smoothAudioIntensity = 0;
+        
+        const attack = 0.22;
+        const decay = 0.07;
+        const current = coreGroup.userData.smoothAudioIntensity;
+        
+        if (targetIntensity > current) {
+          coreGroup.userData.smoothAudioIntensity += (targetIntensity - current) * attack;
+        } else {
+          coreGroup.userData.smoothAudioIntensity += (targetIntensity - current) * decay;
+        }
+        audioIntensity = coreGroup.userData.smoothAudioIntensity;
       }
 
       for (let i = 0; i < N; i++) {
@@ -548,17 +568,10 @@
         if (musicEnable) {
           let r = 1.0;
           if (hasAudio) {
-            let targetIntensity = 0;
-            for (let j = 0; j < 16; j++) targetIntensity += audio[j];
-            targetIntensity = (targetIntensity / 16) * musicSensitive * 6.0;
-            if (!coreGroup.userData.smoothAudioIntensity) coreGroup.userData.smoothAudioIntensity = 0;
-            coreGroup.userData.smoothAudioIntensity += (targetIntensity - coreGroup.userData.smoothAudioIntensity) * 0.15;
-            const audioIntensity = coreGroup.userData.smoothAudioIntensity;
-
             const style = (musicStyle || 'tectonic').toLowerCase();
             if (style === 'tectonic') {
               const tectonic = Math.sin(6 * theta) * Math.cos(6 * phi);
-              const dr = (tectonic > 0.3 ? 0.6 : (tectonic < -0.3 ? -0.2 : 0));
+              const dr = tectonic * 0.6; 
               r = 1.0 + dr * audioIntensity;
             } else if (style === 'wave') {
               const dr = 0.5 * Math.sin(3 * theta - t * 1.5) + 0.3 * Math.cos(4 * phi + t);
@@ -634,8 +647,19 @@
         f.line.material.color.setHSL(0.85 + Math.sin(t + f.life)*0.05, 1, 0.7);
       });
 
-      coreLight.intensity = (4 + Math.sin(t * 2) * 2) * coreIntro;
-      glowOrb.scale.setScalar((6.5 + Math.sin(t * 3) * 0.8) * (0.2 + 0.8 * coreIntro));
+      if (musicEnable) {
+        coreLight.intensity = (0.8 + audioIntensity * 35) * coreIntro;
+        glowOrb.scale.setScalar((6.0 + audioIntensity * 2) * (0.2 + 0.8 * coreIntro));
+        blackHole.scale.setScalar(Math.max(0.5, 1.0 - audioIntensity * 0.8));
+        bhGlow.scale.setScalar((1.3 + audioIntensity * 2.5) * coreIntro);
+        bhGlow.material.opacity = 0.6 + audioIntensity * 1.2;
+      } else {
+        coreLight.intensity = (4 + Math.sin(t * 2) * 2) * coreIntro;
+        glowOrb.scale.setScalar((6.5 + Math.sin(t * 3) * 0.8) * (0.2 + 0.8 * coreIntro));
+        blackHole.scale.setScalar(1.0);
+        bhGlow.scale.setScalar(1.2);
+        bhGlow.material.opacity = 0.9;
+      }
 
       filaments.forEach((f) => {
         const pos = f.line.geometry.attributes.position.array;
@@ -671,7 +695,11 @@
 
       pSystem.rotation.y = t * 0.05 * speedProp;
       pSystem.rotation.z = Math.sin(t * 0.1) * 0.1;
-      pSystem.material.opacity = 0.4 + Math.sin(t * 4) * 0.2;
+      if (musicEnable) {
+        pSystem.material.opacity = 0.05 + audioIntensity * 1.5;
+      } else {
+        pSystem.material.opacity = 0.4 + Math.sin(t * 4) * 0.2;
+      }
 
       if (corePointsMat.userData.shader) corePointsMat.userData.shader.uniforms.uTime.value = t;
       renderer.toneMappingExposure = brightnessProp;
