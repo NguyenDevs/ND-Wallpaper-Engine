@@ -649,7 +649,7 @@
 
       if (musicEnable) {
         coreLight.intensity = (0.8 + audioIntensity * 35) * coreIntro;
-        // glowOrb.scale.setScalar((6.0 + audioIntensity * 2) * (0.2 + 0.8 * coreIntro));
+        glowOrb.scale.setScalar((6.0 + audioIntensity * 2) * (0.2 + 0.8 * coreIntro));
         blackHole.scale.setScalar(Math.max(0.35, 1.0 - audioIntensity * 0.8));
         // bhGlow.scale.setScalar((1.3 + audioIntensity * 1.5) * coreIntro);
         // bhGlow.material.opacity = 0.6 + audioIntensity * 1.2;
