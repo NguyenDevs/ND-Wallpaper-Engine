@@ -167,7 +167,7 @@
 				"step" : 1,
 				"text" : "Clock Horizontal Position (%)",
 				"type" : "slider",
-				"value" : 5
+				"value" : 11
 			},
 			"clockoffsety" : 
 			{
