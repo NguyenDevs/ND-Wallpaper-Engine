@@ -72,7 +72,30 @@ class RingSystem {
         speed: 0.01 + Math.random() * 0.02,
       });
     }
-    return { obj: group, axis: axis.normalize(), speed: rotSpeed, fragments };
+
+    // Add pentagon connectors between fragments
+    const gapConnectors = [];
+    for (let i = 0; i < fragmentsCount; i++) {
+      const nextIdx = (i + 1) % fragmentsCount;
+      if (!skipArr.includes(i) && !skipArr.includes(nextIdx)) {
+        const midAngle = i * (totalArc / fragmentsCount) + arcLength + gap / 2;
+        const poly = this.createPentagon(stoneMat, outerR - innerR);
+        poly.position.set(Math.cos(midAngle) * ((innerR + outerR) / 2), Math.sin(midAngle) * ((innerR + outerR) / 2), 0);
+        group.add(poly);
+        gapConnectors.push(poly);
+      }
+    }
+
+    return { obj: group, axis: axis.normalize(), speed: rotSpeed, fragments, gapConnectors };
+  }
+
+  createPentagon(material, thickness) {
+    const size = thickness * 0.35;
+    const geo = new THREE.DodecahedronGeometry(size, 0);
+    const mesh = new THREE.Mesh(geo, material);
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    return mesh;
   }
 
   getSkipIndices(count, probs) {
@@ -98,6 +121,13 @@ class RingSystem {
       r.obj.rotateX(0.002 * speedProp * ringIntro);
       r.obj.rotateZ(0.001 * speedProp * ringIntro);
       r.obj.scale.setScalar(ringIntro);
+
+      if (r.gapConnectors) {
+        r.gapConnectors.forEach((c) => {
+          c.rotateX(0.015);
+          c.rotateZ(0.01);
+        });
+      }
     });
   }
 }
