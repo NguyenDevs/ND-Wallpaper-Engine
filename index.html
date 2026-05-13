@@ -88,6 +88,11 @@
         <div class="timer-total-num" id="total-s">0</div>
         <div class="timer-total-label" id="cfg-label-total">TỔNG SỐ GIÂY ĐÃ CHƠI</div>
       </div>
+
+      <div class="clock-current-wrap">
+        <div class="clock-time-main" id="current-time-main">00:00:00</div>
+        <div class="clock-date-sub" id="current-date-sub">01/01/2026</div>
+      </div>
     </div>
   </div>
 
@@ -113,7 +118,10 @@
       mouseWeight: 50,
       musicEnable: true,
       musicSensitive: 50,
-      musicStyle: "tectonic"
+      musicStyle: "tectonic",
+      clockMode: 0,
+      clock24h: true,
+      clockShowSeconds: true
     };
     window._wallpaperAudioData = new Array(128).fill(0);
   </script>
@@ -142,40 +150,82 @@
       setTimeout(() => el.classList.remove('flash'), 300);
     }
 
-    function updateLivedTime() {
-      const birthDate = new Date(window.wallpaperConfig.birthDate);
-      if (isNaN(birthDate.getTime())) return;
-      const now = new Date(), diffMs = now - birthDate, totalSecs = Math.floor(diffMs / 1000);
-      let years = now.getFullYear() - birthDate.getFullYear(), months = now.getMonth() - birthDate.getMonth(), days = now.getDate() - birthDate.getDate(), hours = now.getHours() - birthDate.getHours(), minutes = now.getMinutes() - birthDate.getMinutes(), seconds = now.getSeconds() - birthDate.getSeconds();
-      if (seconds < 0) { seconds += 60; minutes--; }
-      if (minutes < 0) { minutes += 60; hours--; }
-      if (hours < 0) { hours += 24; days--; }
-      if (days < 0) { days += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); months--; }
-      if (months < 0) { months += 12; years--; }
+    function updateClock() {
+      const cfg = window.wallpaperConfig;
+      const now = new Date();
 
-      document.getElementById('y').textContent = years;
-      document.getElementById('mo').textContent = fmt(months);
-      document.getElementById('d').textContent = fmt(days);
-      document.getElementById('h').textContent = fmt(hours);
-      document.getElementById('m').textContent = fmt(minutes);
-      document.getElementById('s').textContent = fmt(seconds);
-      document.getElementById('total-s').textContent = totalSecs.toLocaleString();
-      document.getElementById('year-label').textContent = `${window.wallpaperConfig.yearLabelText} ${years + 1}`;
+      // Update Birth Time
+      const birthDate = new Date(cfg.birthDate);
+      if (!isNaN(birthDate.getTime())) {
+        const diffMs = now - birthDate, totalSecs = Math.floor(diffMs / 1000);
+        let years = now.getFullYear() - birthDate.getFullYear(), months = now.getMonth() - birthDate.getMonth(), days = now.getDate() - birthDate.getDate(), hours = now.getHours() - birthDate.getHours(), minutes = now.getMinutes() - birthDate.getMinutes(), seconds = now.getSeconds() - birthDate.getSeconds();
+        if (seconds < 0) { seconds += 60; minutes--; }
+        if (minutes < 0) { minutes += 60; hours--; }
+        if (hours < 0) { hours += 24; days--; }
+        if (days < 0) { days += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); months--; }
+        if (months < 0) { months += 12; years--; }
 
-      if (seconds !== prevS) { flash('s'); prevS = seconds; }
-      if (minutes !== prevM) { flash('m'); prevM = minutes; }
-      if (hours !== prevH) { flash('h'); prevH = hours; }
-      if (days !== prevD) { flash('d'); prevD = days; }
+        document.getElementById('y').textContent = years;
+        document.getElementById('mo').textContent = fmt(months);
+        document.getElementById('d').textContent = fmt(days);
+        document.getElementById('h').textContent = fmt(hours);
+        document.getElementById('m').textContent = fmt(minutes);
+        document.getElementById('s').textContent = fmt(seconds);
+        document.getElementById('total-s').textContent = totalSecs.toLocaleString();
+        document.getElementById('year-label').textContent = `${cfg.yearLabelText} ${years + 1}`;
 
-      const daysInYear = (years % 4 === 0 && (years % 100 !== 0 || years % 400 === 0)) ? 366 : 365;
-      const startOfYear = new Date(now.getFullYear(), birthDate.getMonth(), birthDate.getDate(), birthDate.getHours(), birthDate.getMinutes(), birthDate.getSeconds());
-      if (now < startOfYear) startOfYear.setFullYear(now.getFullYear() - 1);
-      const yearPct = Math.min(100, ((now - startOfYear) / (daysInYear * 86400000)) * 100).toFixed(1);
-      document.getElementById('prog').style.width = yearPct + '%';
-      document.getElementById('pct').textContent = yearPct + '%';
+        if (seconds !== prevS) { flash('s'); prevS = seconds; }
+        if (minutes !== prevM) { flash('m'); prevM = minutes; }
+        if (hours !== prevH) { flash('h'); prevH = hours; }
+        if (days !== prevD) { flash('d'); prevD = days; }
+
+        const daysInYear = (years % 4 === 0 && (years % 100 !== 0 || years % 400 === 0)) ? 366 : 365;
+        const startOfYear = new Date(now.getFullYear(), birthDate.getMonth(), birthDate.getDate(), birthDate.getHours(), birthDate.getMinutes(), birthDate.getSeconds());
+        if (now < startOfYear) startOfYear.setFullYear(now.getFullYear() - 1);
+        const yearPct = Math.min(100, ((now - startOfYear) / (daysInYear * 86400000)) * 100).toFixed(1);
+        document.getElementById('prog').style.width = yearPct + '%';
+        document.getElementById('pct').textContent = yearPct + '%';
+      }
+
+      // Update Current Time
+      let hh = now.getHours();
+      const mm = fmt(now.getMinutes());
+      const ss = fmt(now.getSeconds());
+      let ampm = '';
+      if (!cfg.clock24h) {
+        ampm = hh >= 12 ? ' PM' : ' AM';
+        hh = hh % 12 || 12;
+      }
+      let timeStr = `${fmt(hh)}:${mm}`;
+      if (cfg.clockShowSeconds) timeStr += `:${ss}`;
+      if (!cfg.clock24h) timeStr += ampm;
+      
+      document.getElementById('current-time-main').textContent = timeStr;
+      document.getElementById('current-date-sub').textContent = `${fmt(now.getDate())}/${fmt(now.getMonth() + 1)}/${now.getFullYear()}`;
+
+      // Handle Visibility
+      const wrap = document.querySelector('.timer-wrap');
+      if (cfg.clockMode === 1) {
+        wrap.classList.add('mode-current');
+      } else {
+        wrap.classList.remove('mode-current');
+      }
     }
 
-    setInterval(updateLivedTime, 1000); updateLivedTime();
+    setInterval(updateClock, 1000); updateClock();
+
+    // Wave Effect & Double Click
+    document.querySelector('.timer-wrap').addEventListener('dblclick', function(e) {
+      const wave = document.createElement('div');
+      wave.className = 'wave-effect';
+      wave.style.left = e.clientX + 'px';
+      wave.style.top = e.clientY + 'px';
+      document.body.appendChild(wave);
+      setTimeout(() => wave.remove(), 600);
+
+      window.wallpaperConfig.clockMode = window.wallpaperConfig.clockMode === 0 ? 1 : 0;
+      updateClock();
+    });
 
     window.wallpaperPropertyListener = {
       applyUserProperties: function(properties) {
@@ -199,11 +249,15 @@
         if (properties.musicenable) window.wallpaperConfig.musicEnable = properties.musicenable.value;
         if (properties.musicsensitive) window.wallpaperConfig.musicSensitive = properties.musicsensitive.value;
         if (properties.musicstyle) window.wallpaperConfig.musicStyle = properties.musicstyle.value;
+
+        if (properties.clockmode) window.wallpaperConfig.clockMode = parseInt(properties.clockmode.value);
+        if (properties.clock24h) window.wallpaperConfig.clock24h = properties.clock24h.value;
+        if (properties.clockshowseconds) window.wallpaperConfig.clockShowSeconds = properties.clockshowseconds.value;
         
-        if (properties.birthdate) { window.wallpaperConfig.birthDate = properties.birthdate.value; updateLivedTime(); }
+        if (properties.birthdate) { window.wallpaperConfig.birthDate = properties.birthdate.value; updateClock(); }
         if (properties.timerlabeltop) document.getElementById('cfg-label-top').textContent = properties.timerlabeltop.value;
         if (properties.timertotallabel) document.getElementById('cfg-label-total').textContent = properties.timertotallabel.value;
-        if (properties.yearlabeltext) { window.wallpaperConfig.yearLabelText = properties.yearlabeltext.value; updateLivedTime(); }
+        if (properties.yearlabeltext) { window.wallpaperConfig.yearLabelText = properties.yearlabeltext.value; updateClock(); }
         
         const root = document.documentElement;
         if (properties.clockoffsetx) root.style.setProperty('--clock-x', properties.clockoffsetx.value + '%');
