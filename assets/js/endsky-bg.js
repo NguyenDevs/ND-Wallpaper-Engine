@@ -34,6 +34,8 @@
     uniform mat3 uRot;
     uniform float uZoom;
     uniform float uExposure;
+    uniform float uHoleSize;
+    uniform int uIterations;
 
     #define TAU 6.28318530718
 
@@ -47,11 +49,12 @@
     }
 
     vec3 GetEndSkyColor(vec3 viewDir) {
-        vec2 coord = viewDir.xz / (1.0 + abs(viewDir.y)) * 80.0;
+        vec2 coord = viewDir.xz / (1.0 + abs(viewDir.y)) * uHoleSize;
         vec3 pattern = vec3(0.0);
         float amplitude = 1.0;
         float frequency = 1.0;
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < 32; i++) {
+            if (i >= uIterations) break;
             vec2 direction = vec2(0.707106782) * Rotate(float(i) * 4.3333);
             float k = TAU / (20.0 / frequency);
             float a = amplitude / k;
@@ -85,8 +88,7 @@
     void main() {
         vec2 uv = gl_FragCoord.xy / uResolution * 2.0 - 1.0;
         uv.x *= uResolution.x / uResolution.y;
-        uv *= uZoom;
-        vec3 viewDir = normalize(uRot * vec3(uv, 1.0));
+        vec3 viewDir = normalize(uRot * vec3(uv, uZoom));
         vec3 color = GetEndSkyColor(viewDir);
         color = TechTonemap(color * uExposure);
         color = LinearTosRGB(color);
@@ -125,6 +127,8 @@
     const uRot = gl.getUniformLocation(prog, 'uRot');
     const uZoom = gl.getUniformLocation(prog, 'uZoom');
     const uExposure = gl.getUniformLocation(prog, 'uExposure');
+    const uHoleLoc = gl.getUniformLocation(prog, 'uHoleSize');
+    const uIterLoc = gl.getUniformLocation(prog, 'uIterations');
 
     let lastSrcQ = null;
     let accumulatedQ = { x: 0, y: 0, z: 0, w: 1 };
@@ -220,13 +224,15 @@
         currentZoom += (targetZoom - currentZoom) * 0.05;
         currentQ = lerpQ(currentQ, targetQ, 0.05);
         const b = quatToBasis(currentQ);
-        const zoomScale = 1.0 + (currentZoom - 22) * 0.005;
+        const zoomScale = 1.0 / (1.0 + (currentZoom - 22) * 0.01); 
 
         const time = performance.now() * 0.001 * (cfg.speed ?? 1.0);
         gl.uniform1f(uTime, time);
         gl.uniform2f(uResolution, canvas.width, canvas.height);
-        gl.uniform1f(uZoom, zoomScale);
+        gl.uniform1f(uZoom, zoomScale * (cfg.endskyZoom ?? 1.0));
         gl.uniform1f(uExposure, (cfg.exposure ?? 0.5) * 1.7);
+        gl.uniform1f(uHoleLoc, cfg.endskyHoleSize ?? 80.0);
+        gl.uniform1i(uIterLoc, cfg.endskyIterations ?? 16);
         gl.uniformMatrix3fv(uRot, false, new Float32Array([
             b.rx, b.ry, b.rz,
             b.ux, b.uy, b.uz,

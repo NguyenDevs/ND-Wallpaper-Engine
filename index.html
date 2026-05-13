@@ -153,7 +153,11 @@
       musicEnable: true,
       musicSensitive: 50,
       musicStyle: "tectonic",
-      clockMode: 0
+      clockMode: 0,
+      clockEnable: true,
+      endskyHoleSize: 80,
+      endskyZoom: 1.0,
+      endskyIterations: 16
     };
     window._wallpaperAudioData = new Array(128).fill(0);
   </script>
@@ -290,6 +294,10 @@
         if (properties.glowsize) window.wallpaperConfig.glowSize = properties.glowsize.value;
         if (properties.glowintensity) window.wallpaperConfig.glowIntensity = properties.glowintensity.value;
         
+        if (properties.endsky_hole_size) window.wallpaperConfig.endskyHoleSize = properties.endsky_hole_size.value;
+        if (properties.endsky_zoom) window.wallpaperConfig.endskyZoom = properties.endsky_zoom.value;
+        if (properties.endsky_iterations) window.wallpaperConfig.endskyIterations = properties.endsky_iterations.value;
+        
         if (properties.mousedrag) window.wallpaperConfig.mouseDrag = properties.mousedrag.value;
         if (properties.mousefollow) window.wallpaperConfig.mouseFollow = properties.mousefollow.value;
         if (properties.mouseweight) window.wallpaperConfig.mouseWeight = properties.mouseweight.value;
@@ -299,6 +307,10 @@
         if (properties.musicstyle) window.wallpaperConfig.musicStyle = properties.musicstyle.value;
 
         if (properties.clockmode) window.wallpaperConfig.clockMode = parseInt(properties.clockmode.value);
+        if (properties.clockenable) {
+            window.wallpaperConfig.clockEnable = properties.clockenable.value;
+            document.querySelector('.timer-wrap').style.display = properties.clockenable.value ? '' : 'none';
+        }
         
         if (properties.birthdate) { window.wallpaperConfig.birthDate = properties.birthdate.value; updateClock(); }
         if (properties.timerlabeltop) document.getElementById('cfg-label-top').textContent = properties.timerlabeltop.value;
