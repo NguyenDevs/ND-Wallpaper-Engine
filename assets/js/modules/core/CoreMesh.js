@@ -37,29 +37,56 @@ class CoreMesh {
       blending: THREE.AdditiveBlending, map: Utils.getGlowTex('rgba(200,100,255,1)', 16), depthWrite: false,
     });
 
+    this.wireMat.onBeforeCompile = (shader) => {
+      shader.vertexShader = `
+        varying float vDepth;
+        ${shader.vertexShader}
+      `.replace(
+        `void main() {`,
+        `void main() { vDepth = position.z;`
+      );
+      shader.fragmentShader = `
+        varying float vDepth;
+        ${shader.fragmentShader}
+      `.replace(
+        `vec4 diffuseColor = vec4( diffuse, opacity );`,
+        `
+        float depthFade = smoothstep(-1.4, 1.2, vDepth);
+        vec4 diffuseColor = vec4( diffuse, opacity * depthFade );
+        `
+      );
+    };
+
     this.pointsMat.onBeforeCompile = (shader) => {
       shader.uniforms.uTime = { value: 0 };
       shader.vertexShader = `
         attribute float aRandom;
         varying float vRandom;
+        varying float vDepth;
         uniform float uTime;
         ${shader.vertexShader}
       `.replace(
+        `void main() {`,
+        `void main() { 
+          vRandom = aRandom;
+          vDepth = position.z;`
+      ).replace(
         `gl_PointSize = size;`,
         `float t = uTime * (2.0 + aRandom * 3.0) + aRandom * 100.0;
          float twinkle = 0.8 + 0.2 * sin(t);
-         gl_PointSize = size * twinkle;
-         vRandom = aRandom;`
+         gl_PointSize = size * twinkle;`
       );
       shader.fragmentShader = `
         varying float vRandom;
+        varying float vDepth;
         uniform float uTime;
         ${shader.fragmentShader}
       `.replace(
         `vec4 diffuseColor = vec4( diffuse, opacity );`,
         `float t = uTime * (2.0 + vRandom * 3.0) + vRandom * 100.0;
          float twinkle = 0.4 + 0.6 * pow(0.5 + 0.5 * sin(t), 2.0);
-         vec4 diffuseColor = vec4( diffuse, opacity * twinkle );`
+         float depthFade = smoothstep(-1.4, 1.0, vDepth);
+         vec4 diffuseColor = vec4( diffuse, opacity * twinkle * depthFade );`
       );
       this.pointsMat.userData.shader = shader;
     };
@@ -84,13 +111,15 @@ class CoreMesh {
         let r = 1.0;
         const style = (musicStyle || 'tectonic').toLowerCase();
         if (style === 'tectonic') {
-          const tectonic = Math.sin(6 * theta) * Math.cos(6 * phi);
-          r = 1.0 + tectonic * 0.6 * audioIntensity;
+          const n1 = Math.sin(5 * theta) * Math.cos(5 * phi);
+          const n2 = Math.sin(12 * theta + t) * Math.cos(12 * phi - t);
+          const dr = n1 * 0.6 + n2 * 0.25;
+          r = 1.0 + dr * audioIntensity;
         } else if (style === 'wave') {
-          const dr = 0.5 * Math.sin(3 * theta - t * 1.5) + 0.3 * Math.cos(4 * phi + t);
+          const dr = 0.5 * Math.sin(3.5 * theta - t * 2.0);
           r = 1.0 + dr * audioIntensity;
         } else if (style === 'ripple') {
-          const dr = 0.4 * Math.sin(8 * theta + t * 2) * Math.cos(t * 1.2) + 0.2 * Math.sin(phi * 6);
+          const dr = 0.45 * Math.sin(8.0 * phi - t * 3.0);
           r = 1.0 + dr * audioIntensity;
         }
         positions[idx] = bx * r; positions[idx + 1] = by * r; positions[idx + 2] = bz * r;
