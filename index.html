@@ -155,6 +155,7 @@
       musicStyle: "tectonic",
       clockMode: 0,
       clockEnable: true,
+      ringSpacing: 1.0,
       endskyHoleSize: 80,
       endskyZoom: 1.0,
       endskyIterations: 16
@@ -284,6 +285,7 @@
         if (properties.corebrightness) window.wallpaperConfig.exposure = properties.corebrightness.value;
         if (properties.corespeed) window.wallpaperConfig.speed = properties.corespeed.value;
         if (properties.corezoom) window.wallpaperConfig.zoom = properties.corezoom.value;
+        if (properties.ringspacing) { window.wallpaperConfig.ringSpacing = properties.ringspacing.value; window.dispatchEvent(new CustomEvent('threejs-update', {detail: {type:'rings'}})); }
         if (properties.coreoffsetx) { window.wallpaperConfig.offsetX = properties.coreoffsetx.value; window.dispatchEvent(new Event('resize')); }
         if (properties.coreoffsety) { window.wallpaperConfig.offsetY = properties.coreoffsety.value; window.dispatchEvent(new Event('resize')); }
         if (properties.ringamount) { window.wallpaperConfig.ringAmount = properties.ringamount.value; window.dispatchEvent(new CustomEvent('threejs-update', {detail: {type:'rings'}})); }
