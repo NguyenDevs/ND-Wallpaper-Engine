@@ -115,15 +115,161 @@ body {
 .clock-current-wrap {
   display: none;
   flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  width: 100%;
+  max-width: 650px;
+}
+.timer-wrap.mode-current .clock-current-wrap { display: flex; }
+
+.clock-tag-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(178,137,239,0.5);
+  margin-bottom: 12px;
+}
+.clock-b-units {
+  display: flex;
   align-items: center;
-  gap: 10px;
+  gap: clamp(10px, 2vw, 20px);
   width: 100%;
 }
-
-.timer-wrap.mode-current .clock-current-wrap {
+.clock-b-unit {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
 }
-
+.clock-num {
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(20px, 4.5vw, 48px);
+  font-weight: 700;
+  color: #fff;
+  background: rgba(20, 20, 25, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  width: clamp(50px, 8vw, 86px);
+  height: clamp(50px, 8vw, 86px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.15s, border-color 0.15s;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+.clock-num::after {
+  content: '';
+  position: absolute;
+  left: 8px; right: 8px;
+  top: 50%; height: 0.5px;
+  background: rgba(255,255,255,0.06);
+}
+.clock-num.flash { color: #d4a8ff; border-color: rgba(178,137,239,0.4); }
+.clock-num--sec { color: rgba(178,137,239,0.75); border-color: rgba(178,137,239,0.15); }
+.clock-num--sec.flash { color: #d4a8ff; border-color: rgba(178,137,239,0.5); }
+.clock-b-lbl {
+  font-family: 'Syne', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.22);
+}
+.clock-b-sep {
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(20px, 4vw, 36px);
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.1);
+  padding: 0 clamp(2px, 0.5vw, 10px);
+  margin-bottom: clamp(14px, 2.5vw, 24px);
+  line-height: 1;
+  flex-shrink: 0;
+}
+.clock-b-divider {
+  width: 100%;
+  height: 0.5px;
+  background: rgba(255,255,255,0.06);
+  margin: 14px 0 10px;
+}
+.clock-b-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 100%;
+  gap: 20px;
+}
+.clock-b-day {
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(178,137,239,0.55);
+}
+.clock-b-date {
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.05em;
+}
+.ck-accent-line {
+  position: absolute;
+  top: 0; left: 2rem; right: 2rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(178,137,239,0.5), transparent);
+}
+.clock-tz-badge {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: rgba(255,255,255,0.2);
+  letter-spacing: 0.05em;
+  background: rgba(255,255,255,0.04);
+  border: 0.5px solid rgba(255,255,255,0.07);
+  border-radius: 6px;
+  padding: 3px 8px;
+}
+.clock-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 18px;
+}
+.clock-day-prog-wrap {
+  width: 100%;
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.clock-day-prog-label {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Syne', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+}
+.clock-day-prog-pct { color: rgba(178,137,239,0.55); }
+.clock-day-prog-bg {
+  height: 3px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.clock-day-prog-fill {
+  height: 100%;
+  background: linear-gradient(90deg, rgba(150,97,255,0.7), rgba(178,137,239,0.9));
+  border-radius: 99px;
+  transition: width 1s cubic-bezier(0.4,0,0.2,1);
+}
 .clock-time-main {
   font-family: 'Space Mono', monospace;
   font-size: clamp(40px, 8vw, 80px);
