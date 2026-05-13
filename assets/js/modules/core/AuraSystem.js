@@ -11,7 +11,7 @@ class AuraSystem {
     this.group.add(this.blackHole);
 
     this.bhGlow = new THREE.Sprite(new THREE.SpriteMaterial({
-      map: Utils.getGlowTex('rgba(200,150,255,0.9)', 64),
+      map: Utils.getGlowTex('rgba(130, 17, 250, 0.9)', 64),
       blending: THREE.AdditiveBlending, transparent: true, depthWrite: false,
     }));
     this.bhGlow.scale.setScalar(1.2);
@@ -32,7 +32,7 @@ class AuraSystem {
     const ptIntensity = cfg.pointLightIntensity ?? 5.0;
 
     if (musicEnable) {
-      coreLight.intensity = (0.2 + audioIntensity * 8) * coreIntro * ptIntensity;
+      coreLight.intensity = (0.5 + audioIntensity * 3) * coreIntro * ptIntensity;
       this.glowOrb.scale.setScalar((6.0 + audioIntensity * 2) * (0.2 + 0.8 * coreIntro) * glowSize);
       this.blackHole.scale.setScalar(Math.max(0.35, 1.0 - audioIntensity * 0.8));
     } else {

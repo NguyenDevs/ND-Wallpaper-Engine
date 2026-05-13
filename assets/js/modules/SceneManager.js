@@ -27,7 +27,13 @@ class SceneManager {
 
     this.coreLight = new THREE.PointLight(0x8800ff, 5, 25);
     this.coreLight.castShadow = true;
-    this.coreLight.shadow.bias = -0.001;
+    this.coreLight.shadow.mapSize.width = 2048;
+    this.coreLight.shadow.mapSize.height = 2048;
+    this.coreLight.shadow.camera.near = 0.1;
+    this.coreLight.shadow.camera.far = 25;
+    this.coreLight.shadow.bias = -0.0001;
+    this.coreLight.shadow.normalBias = 0.05;
+    this.coreLight.shadow.radius = 4;
 
     this.staticGroup = new THREE.Group();
     this.scene.add(this.staticGroup);
