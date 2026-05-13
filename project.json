@@ -322,7 +322,7 @@
 			{
 				"index" : 30,
 				"order" : 130,
-				"text" : "Music Visualizer",
+				"text" : "Sound Visualizer",
 				"type" : "group"
 			},
 			"musicenable" : 
