@@ -52,14 +52,22 @@ class RingSystem {
     for (let i = 0; i < fragmentsCount; i++) {
       if (skipArr.includes(i)) continue;
       const start = i * (totalArc / fragmentsCount);
+      const end = start + arcLength;
+      const chamfer = 0.15;
+      
       const shape = new THREE.Shape();
-      shape.absarc(0, 0, outerR, start, start + arcLength, false);
-      shape.lineTo(Math.cos(start + arcLength) * innerR, Math.sin(start + arcLength) * innerR);
-      shape.absarc(0, 0, innerR, start + arcLength, start, true);
-      shape.lineTo(Math.cos(start) * outerR, Math.sin(start) * outerR);
+      shape.absarc(0, 0, outerR, start + chamfer / outerR, end - chamfer / outerR, false);
+      
+      shape.lineTo(Math.cos(end) * (outerR - chamfer), Math.sin(end) * (outerR - chamfer));
+      shape.lineTo(Math.cos(end) * (innerR + chamfer), Math.sin(end) * (innerR + chamfer));
+      
+      shape.absarc(0, 0, innerR, end - chamfer / innerR, start + chamfer / innerR, true);
+      
+      shape.lineTo(Math.cos(start) * (innerR + chamfer), Math.sin(start) * (innerR + chamfer));
+      shape.lineTo(Math.cos(start) * (outerR - chamfer), Math.sin(start) * (outerR - chamfer));
       const extrudeSettings = {
-        depth: depth, bevelEnabled: true, bevelSegments: 3,
-        steps: 1, bevelSize: 0.05, bevelThickness: 0.05, curveSegments: 48,
+        depth: depth, bevelEnabled: true, bevelSegments: 1,
+        steps: 1, bevelSize: 0.15, bevelThickness: 0.15, curveSegments: 48,
       };
       const geo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
       geo.translate(0, 0, -depth / 2);
@@ -73,13 +81,12 @@ class RingSystem {
       });
     }
 
-    // Add pentagon connectors between fragments
     const gapConnectors = [];
     for (let i = 0; i < fragmentsCount; i++) {
       const nextIdx = (i + 1) % fragmentsCount;
       if (!skipArr.includes(i) && !skipArr.includes(nextIdx)) {
         const midAngle = i * (totalArc / fragmentsCount) + arcLength + gap / 2;
-        const poly = this.createPentagon(stoneMat, outerR - innerR);
+        const poly = this.createTriangle(stoneMat, outerR - innerR);
         poly.position.set(Math.cos(midAngle) * ((innerR + outerR) / 2), Math.sin(midAngle) * ((innerR + outerR) / 2), 0);
         group.add(poly);
         gapConnectors.push(poly);
@@ -89,9 +96,9 @@ class RingSystem {
     return { obj: group, axis: axis.normalize(), speed: rotSpeed, fragments, gapConnectors };
   }
 
-  createPentagon(material, thickness) {
-    const size = thickness * 0.35;
-    const geo = new THREE.DodecahedronGeometry(size, 0);
+  createTriangle(material, thickness) {
+    const size = thickness * 0.4;
+    const geo = new THREE.IcosahedronGeometry(size, 0);
     const mesh = new THREE.Mesh(geo, material);
     mesh.castShadow = true;
     mesh.receiveShadow = true;
