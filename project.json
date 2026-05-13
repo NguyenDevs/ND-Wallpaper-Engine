@@ -16,7 +16,7 @@
 			},
 			"group_core" : 
 			{
-				"index" : 0,
+				"index" : 100,
 				"order" : 100,
 				"text" : "Core Settings",
 				"type" : "group"
@@ -24,7 +24,7 @@
 			"corebrightness" : 
 			{
 				"group" : "group_core",
-				"index" : 1,
+				"index" : 101,
 				"max" : 3,
 				"min" : 0.1,
 				"order" : 101,
@@ -36,7 +36,7 @@
 			"corespeed" : 
 			{
 				"group" : "group_core",
-				"index" : 2,
+				"index" : 102,
 				"max" : 4,
 				"min" : 0,
 				"order" : 102,
@@ -48,7 +48,7 @@
 			"corezoom" : 
 			{
 				"group" : "group_core",
-				"index" : 3,
+				"index" : 103,
 				"max" : 50,
 				"min" : 5,
 				"order" : 103,
@@ -60,7 +60,7 @@
 			"coreoffsetx" : 
 			{
 				"group" : "group_core",
-				"index" : 4,
+				"index" : 104,
 				"max" : 20,
 				"min" : -20,
 				"order" : 104,
@@ -72,7 +72,7 @@
 			"coreoffsety" : 
 			{
 				"group" : "group_core",
-				"index" : 5,
+				"index" : 105,
 				"max" : 10,
 				"min" : -10,
 				"order" : 105,
@@ -84,7 +84,7 @@
 			"ringamount" : 
 			{
 				"group" : "group_core",
-				"index" : 6,
+				"index" : 106,
 				"max" : 8,
 				"min" : 1,
 				"order" : 106,
@@ -96,7 +96,7 @@
 			"particleamount" : 
 			{
 				"group" : "group_core",
-				"index" : 7,
+				"index" : 107,
 				"max" : 10000,
 				"min" : 500,
 				"order" : 107,
@@ -108,7 +108,7 @@
 			"particlesize" : 
 			{
 				"group" : "group_core",
-				"index" : 8,
+				"index" : 108,
 				"max" : 0.5,
 				"min" : 0.01,
 				"order" : 108,
@@ -120,7 +120,7 @@
 			"debrisamount" : 
 			{
 				"group" : "group_core",
-				"index" : 9,
+				"index" : 109,
 				"max" : 100,
 				"min" : 0,
 				"order" : 109,
@@ -132,7 +132,7 @@
 			"debrissize" : 
 			{
 				"group" : "group_core",
-				"index" : 10,
+				"index" : 110,
 				"max" : 3,
 				"min" : 0.1,
 				"order" : 110,
@@ -144,7 +144,7 @@
 			"glowsize" : 
 			{
 				"group" : "group_core",
-				"index" : 11,
+				"index" : 111,
 				"max" : 3,
 				"min" : 0.1,
 				"order" : 111,
@@ -156,7 +156,7 @@
 			"glowintensity" : 
 			{
 				"group" : "group_core",
-				"index" : 12,
+				"index" : 112,
 				"max" : 5,
 				"min" : 0,
 				"order" : 112,
@@ -167,16 +167,54 @@
 			},
 			"group_clock" : 
 			{
-				"index" : 13,
-				"order" : 113,
+				"index" : 200,
+				"order" : 200,
 				"text" : "Clock & UI Settings",
 				"type" : "group"
+			},
+			"clockmode" : 
+			{
+				"group" : "group_clock",
+				"index" : 201,
+				"options" : 
+				[
+					{
+						"label" : "Birth Countdown",
+						"value" : 0
+					},
+					{
+						"label" : "Current Time",
+						"value" : 1
+					}
+				],
+				"order" : 201,
+				"text" : "Display Mode",
+				"type" : "combo",
+				"value" : 0
+			},
+			"clock24h" : 
+			{
+				"group" : "group_clock",
+				"index" : 202,
+				"order" : 202,
+				"text" : "24h Format",
+				"type" : "bool",
+				"value" : true
+			},
+			"clockshowseconds" : 
+			{
+				"group" : "group_clock",
+				"index" : 203,
+				"order" : 203,
+				"text" : "Show Seconds",
+				"type" : "bool",
+				"value" : true
 			},
 			"birthdate" : 
 			{
 				"group" : "group_clock",
-				"index" : 14,
-				"order" : 114,
+				"index" : 204,
+				"order" : 204,
 				"text" : "Birth Date",
 				"type" : "textinput",
 				"value" : "2004-07-04T09:00:00+07:00"
@@ -184,10 +222,10 @@
 			"clockoffsetx" : 
 			{
 				"group" : "group_clock",
-				"index" : 15,
+				"index" : 205,
 				"max" : 100,
 				"min" : 0,
-				"order" : 115,
+				"order" : 205,
 				"step" : 1,
 				"text" : "Clock Horizontal Position (%)",
 				"type" : "slider",
@@ -196,10 +234,10 @@
 			"clockoffsety" : 
 			{
 				"group" : "group_clock",
-				"index" : 16,
+				"index" : 206,
 				"max" : 100,
 				"min" : 0,
-				"order" : 116,
+				"order" : 206,
 				"step" : 1,
 				"text" : "Clock Vertical Position (%)",
 				"type" : "slider",
@@ -208,10 +246,10 @@
 			"clockblur" : 
 			{
 				"group" : "group_clock",
-				"index" : 17,
+				"index" : 207,
 				"max" : 50,
 				"min" : 0,
-				"order" : 117,
+				"order" : 207,
 				"step" : 1,
 				"text" : "Background Blur (px)",
 				"type" : "slider",
@@ -219,16 +257,16 @@
 			},
 			"group_text" : 
 			{
-				"index" : 16,
-				"order" : 116,
+				"index" : 300,
+				"order" : 300,
 				"text" : "Label Settings",
 				"type" : "group"
 			},
 			"timerlabeltop" : 
 			{
 				"group" : "group_text",
-				"index" : 17,
-				"order" : 117,
+				"index" : 301,
+				"order" : 301,
 				"text" : "Top Label",
 				"type" : "textinput",
 				"value" : "nguyendevs has joined the Earth server"
@@ -236,8 +274,8 @@
 			"timertotallabel" : 
 			{
 				"group" : "group_text",
-				"index" : 18,
-				"order" : 118,
+				"index" : 302,
+				"order" : 302,
 				"text" : "Total Seconds",
 				"type" : "textinput",
 				"value" : "TOTAL SECONDS PLAYED"
@@ -245,8 +283,8 @@
 			"yearlabeltext" : 
 			{
 				"group" : "group_text",
-				"index" : 19,
-				"order" : 119,
+				"index" : 303,
+				"order" : 303,
 				"text" : "Year Label",
 				"type" : "textinput",
 				"value" : "Year"
@@ -254,8 +292,8 @@
 			"label_year" : 
 			{
 				"group" : "group_text",
-				"index" : 20,
-				"order" : 120,
+				"index" : 304,
+				"order" : 304,
 				"text" : "Year",
 				"type" : "textinput",
 				"value" : "Year"
@@ -263,8 +301,8 @@
 			"label_month" : 
 			{
 				"group" : "group_text",
-				"index" : 21,
-				"order" : 121,
+				"index" : 305,
+				"order" : 305,
 				"text" : "Month",
 				"type" : "textinput",
 				"value" : "Month"
@@ -272,8 +310,8 @@
 			"label_day" : 
 			{
 				"group" : "group_text",
-				"index" : 22,
-				"order" : 122,
+				"index" : 306,
+				"order" : 306,
 				"text" : "Day",
 				"type" : "textinput",
 				"value" : "Day"
@@ -281,8 +319,8 @@
 			"label_hour" : 
 			{
 				"group" : "group_text",
-				"index" : 23,
-				"order" : 123,
+				"index" : 307,
+				"order" : 307,
 				"text" : "Hour",
 				"type" : "textinput",
 				"value" : "Hour"
@@ -290,8 +328,8 @@
 			"label_minute" : 
 			{
 				"group" : "group_text",
-				"index" : 24,
-				"order" : 124,
+				"index" : 308,
+				"order" : 308,
 				"text" : "Minute",
 				"type" : "textinput",
 				"value" : "Minute"
@@ -299,24 +337,24 @@
 			"label_second" : 
 			{
 				"group" : "group_text",
-				"index" : 25,
-				"order" : 125,
+				"index" : 309,
+				"order" : 309,
 				"text" : "Second",
 				"type" : "textinput",
 				"value" : "Second"
 			},
 			"group_mouse" : 
 			{
-				"index" : 26,
-				"order" : 126,
+				"index" : 400,
+				"order" : 400,
 				"text" : "Mouse Settings",
 				"type" : "group"
 			},
 			"mousedrag" : 
 			{
 				"group" : "group_mouse",
-				"index" : 27,
-				"order" : 127,
+				"index" : 401,
+				"order" : 401,
 				"text" : "Drag",
 				"type" : "bool",
 				"value" : true
@@ -324,8 +362,8 @@
 			"mousefollow" : 
 			{
 				"group" : "group_mouse",
-				"index" : 28,
-				"order" : 128,
+				"index" : 402,
+				"order" : 402,
 				"text" : "Follow Mouse",
 				"type" : "bool",
 				"value" : false
@@ -333,10 +371,10 @@
 			"mouseweight" : 
 			{
 				"group" : "group_mouse",
-				"index" : 29,
+				"index" : 403,
 				"max" : 100,
 				"min" : 1,
-				"order" : 129,
+				"order" : 403,
 				"step" : 1,
 				"text" : "Weight",
 				"type" : "slider",
@@ -344,16 +382,16 @@
 			},
 			"group_music" : 
 			{
-				"index" : 30,
-				"order" : 130,
+				"index" : 500,
+				"order" : 500,
 				"text" : "Sound Visualizer",
 				"type" : "group"
 			},
 			"musicenable" : 
 			{
 				"group" : "group_music",
-				"index" : 31,
-				"order" : 131,
+				"index" : 501,
+				"order" : 501,
 				"text" : "Enable",
 				"type" : "bool",
 				"value" : true
@@ -361,10 +399,10 @@
 			"musicsensitive" : 
 			{
 				"group" : "group_music",
-				"index" : 32,
+				"index" : 502,
 				"max" : 100,
 				"min" : 1,
-				"order" : 132,
+				"order" : 502,
 				"step" : 1,
 				"text" : "Sensitive",
 				"type" : "slider",
@@ -373,7 +411,7 @@
 			"musicstyle" : 
 			{
 				"group" : "group_music",
-				"index" : 33,
+				"index" : 503,
 				"options" : 
 				[
 					{
@@ -389,7 +427,7 @@
 						"value" : "ripple"
 					}
 				],
-				"order" : 133,
+				"order" : 503,
 				"text" : "Style",
 				"type" : "combo",
 				"value" : "tectonic"
