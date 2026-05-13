@@ -62,7 +62,7 @@ class WallpaperEngine {
       mid = (mid / 36) * ((cfg.musicSensitive ?? 50) / 100) * 3.0;
 
       const target = bass * 0.8 + mid * 0.2;
-      const attack = 0.22, decay = 0.07;
+      const attack = 0.45, decay = 0.12;
       if (target > this.smoothAudioIntensity) this.smoothAudioIntensity += (target - this.smoothAudioIntensity) * attack;
       else this.smoothAudioIntensity += (target - this.smoothAudioIntensity) * decay;
     } else {
