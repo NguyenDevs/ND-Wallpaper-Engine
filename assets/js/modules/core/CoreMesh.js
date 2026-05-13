@@ -39,19 +39,19 @@ class CoreMesh {
 
     this.wireMat.onBeforeCompile = (shader) => {
       shader.vertexShader = `
-        varying float vDepth;
+        varying float vNormalZ;
         ${shader.vertexShader}
       `.replace(
         `void main() {`,
-        `void main() { vDepth = position.z;`
+        `void main() { vNormalZ = (normalMatrix * normal).z;`
       );
       shader.fragmentShader = `
-        varying float vDepth;
+        varying float vNormalZ;
         ${shader.fragmentShader}
       `.replace(
         `vec4 diffuseColor = vec4( diffuse, opacity );`,
         `
-        float depthFade = smoothstep(-1.4, 1.2, vDepth);
+        float depthFade = smoothstep(-0.2, 0.8, vNormalZ);
         vec4 diffuseColor = vec4( diffuse, opacity * depthFade );
         `
       );
@@ -62,14 +62,14 @@ class CoreMesh {
       shader.vertexShader = `
         attribute float aRandom;
         varying float vRandom;
-        varying float vDepth;
+        varying float vNormalZ;
         uniform float uTime;
         ${shader.vertexShader}
       `.replace(
         `void main() {`,
         `void main() { 
           vRandom = aRandom;
-          vDepth = position.z;`
+          vNormalZ = (normalMatrix * normalize(position)).z;`
       ).replace(
         `gl_PointSize = size;`,
         `float t = uTime * (2.0 + aRandom * 3.0) + aRandom * 100.0;
@@ -78,14 +78,14 @@ class CoreMesh {
       );
       shader.fragmentShader = `
         varying float vRandom;
-        varying float vDepth;
+        varying float vNormalZ;
         uniform float uTime;
         ${shader.fragmentShader}
       `.replace(
         `vec4 diffuseColor = vec4( diffuse, opacity );`,
         `float t = uTime * (2.0 + vRandom * 3.0) + vRandom * 100.0;
          float twinkle = 0.4 + 0.6 * pow(0.5 + 0.5 * sin(t), 2.0);
-         float depthFade = smoothstep(-1.4, 1.0, vDepth);
+         float depthFade = smoothstep(-0.2, 0.8, vNormalZ);
          vec4 diffuseColor = vec4( diffuse, opacity * twinkle * depthFade );`
       );
       this.pointsMat.userData.shader = shader;
