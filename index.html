@@ -189,6 +189,8 @@
         if (properties.particlesize) { window.wallpaperConfig.particleSize = properties.particlesize.value; window.dispatchEvent(new CustomEvent('threejs-update', {detail: {type:'particlesize'}})); }
         if (properties.debrisamount) { window.wallpaperConfig.debrisAmount = properties.debrisamount.value; window.dispatchEvent(new CustomEvent('threejs-update', {detail: {type:'debris'}})); }
         if (properties.debrissize) { window.wallpaperConfig.debrisSize = properties.debrissize.value; window.dispatchEvent(new CustomEvent('threejs-update', {detail: {type:'debrissize'}})); }
+        if (properties.glowsize) window.wallpaperConfig.glowSize = properties.glowsize.value;
+        if (properties.glowintensity) window.wallpaperConfig.glowIntensity = properties.glowintensity.value;
         
         if (properties.mousedrag) window.wallpaperConfig.mouseDrag = properties.mousedrag.value;
         if (properties.mousefollow) window.wallpaperConfig.mouseFollow = properties.mousefollow.value;
