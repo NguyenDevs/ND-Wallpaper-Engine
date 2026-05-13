@@ -101,6 +101,59 @@ body {
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.4);
   text-align: center;
+  transition: opacity 0.3s ease;
+}
+
+.timer-wrap.mode-current .timer-label-top,
+.timer-wrap.mode-current .timer-units,
+.timer-wrap.mode-current .timer-progress-wrap,
+.timer-wrap.mode-current .timer-divider,
+.timer-wrap.mode-current .timer-total {
+  display: none;
+}
+
+.clock-current-wrap {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.timer-wrap.mode-current .clock-current-wrap {
+  display: flex;
+}
+
+.clock-time-main {
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(40px, 8vw, 80px);
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 20px rgba(178, 137, 239, 0.4);
+}
+
+.clock-date-sub {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.wave-effect {
+  position: fixed;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  animation: wave-expand 0.6s ease-out forwards;
+}
+
+@keyframes wave-expand {
+  0% { width: 0; height: 0; opacity: 1; }
+  100% { width: 150px; height: 150px; opacity: 0; }
 }
 
 .timer-units {
