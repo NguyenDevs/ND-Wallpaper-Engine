@@ -160,7 +160,8 @@
       ringSpacing: 1.0,
       endskyHoleSize: 80,
       endskyZoom: 1.0,
-      endskyIterations: 16
+      endskyIterations: 16,
+      backgroundSpeed: 0.5
     };
     window._wallpaperAudioData = new Array(128).fill(0);
   </script>
@@ -303,6 +304,7 @@
         if (properties.endsky_hole_size) window.wallpaperConfig.endskyHoleSize = properties.endsky_hole_size.value;
         if (properties.endsky_zoom) window.wallpaperConfig.endskyZoom = properties.endsky_zoom.value;
         if (properties.endsky_iterations) window.wallpaperConfig.endskyIterations = properties.endsky_iterations.value;
+        if (properties.backgroundspeed) window.wallpaperConfig.backgroundSpeed = properties.backgroundspeed.value;
         
         if (properties.mousedrag) window.wallpaperConfig.mouseDrag = properties.mousedrag.value;
         if (properties.mousefollow) window.wallpaperConfig.mouseFollow = properties.mousefollow.value;

@@ -226,7 +226,7 @@
         const b = quatToBasis(currentQ);
         const zoomScale = 1.0 / (1.0 + (currentZoom - 22) * 0.01); 
 
-        const time = performance.now() * 0.001 * (cfg.speed ?? 1.0);
+        const time = performance.now() * 0.001 * (cfg.backgroundSpeed ?? 0.5);
         gl.uniform1f(uTime, time);
         gl.uniform2f(uResolution, canvas.width, canvas.height);
         gl.uniform1f(uZoom, zoomScale * (cfg.endskyZoom ?? 1.0));
