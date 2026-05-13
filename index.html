@@ -93,8 +93,8 @@
       <div class="clock-current-wrap">
         <div class="ck-accent-line"></div>
         <div class="clock-header-row">
-          <div class="clock-tag-label">Current Time</div>
-          <div class="clock-tz-badge">GMT+7</div>
+          <div class="clock-tag-label" id="cfg-label-current">Current Time</div>
+          <div class="clock-tz-badge" id="current-tz">GMT+0</div>
         </div>
         <div class="clock-b-units">
           <div class="clock-b-unit">
@@ -119,7 +119,7 @@
         </div>
         <div class="clock-day-prog-wrap">
           <div class="clock-day-prog-label">
-            <span>% ngày hôm nay</span>
+            <span id="cfg-label-dayprog">% ngày hôm nay</span>
             <span class="clock-day-prog-pct" id="day-pct">0%</span>
           </div>
           <div class="clock-day-prog-bg">
@@ -153,9 +153,7 @@
       musicEnable: true,
       musicSensitive: 50,
       musicStyle: "tectonic",
-      clockMode: 0,
-      clock24h: true,
-      clockShowSeconds: true
+      clockMode: 0
     };
     window._wallpaperAudioData = new Array(128).fill(0);
   </script>
@@ -227,10 +225,6 @@
       const mm = now.getMinutes();
       const ss = now.getSeconds();
       
-      if (!cfg.clock24h) {
-        hh = hh % 12 || 12;
-      }
-      
       document.getElementById('current-h').textContent = fmt(hh);
       document.getElementById('current-m').textContent = fmt(mm);
       document.getElementById('current-s').textContent = fmt(ss);
@@ -240,9 +234,14 @@
       if (hh !== prevSH) { flash('current-h'); prevSH = hh; }
 
       // Date & Day
-      const daysVN = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
-      document.getElementById('current-day').textContent = daysVN[now.getDay()];
+      const daysEN = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      document.getElementById('current-day').textContent = daysEN[now.getDay()];
       document.getElementById('current-date-sub').textContent = `${fmt(now.getDate())}/${fmt(now.getMonth() + 1)}/${now.getFullYear()}`;
+
+      // Timezone
+      const offset = -now.getTimezoneOffset() / 60;
+      const tzStr = "GMT" + (offset >= 0 ? "+" : "") + offset;
+      document.getElementById('current-tz').textContent = tzStr;
 
       // Day progress
       const secOfDay = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
@@ -300,13 +299,13 @@
         if (properties.musicstyle) window.wallpaperConfig.musicStyle = properties.musicstyle.value;
 
         if (properties.clockmode) window.wallpaperConfig.clockMode = parseInt(properties.clockmode.value);
-        if (properties.clock24h) window.wallpaperConfig.clock24h = properties.clock24h.value;
-        if (properties.clockshowseconds) window.wallpaperConfig.clockShowSeconds = properties.clockshowseconds.value;
         
         if (properties.birthdate) { window.wallpaperConfig.birthDate = properties.birthdate.value; updateClock(); }
         if (properties.timerlabeltop) document.getElementById('cfg-label-top').textContent = properties.timerlabeltop.value;
         if (properties.timertotallabel) document.getElementById('cfg-label-total').textContent = properties.timertotallabel.value;
         if (properties.yearlabeltext) { window.wallpaperConfig.yearLabelText = properties.yearlabeltext.value; updateClock(); }
+        if (properties.currenttimelabel) document.getElementById('cfg-label-current').textContent = properties.currenttimelabel.value;
+        if (properties.dayprogresslabel) document.getElementById('cfg-label-dayprog').textContent = properties.dayprogresslabel.value;
         
         const root = document.documentElement;
         if (properties.clockoffsetx) root.style.setProperty('--clock-x', properties.clockoffsetx.value + '%');
