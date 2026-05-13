@@ -1,454 +1,535 @@
 {
-	"contentrating": "Everyone",
-	"description": "NguyenDevs' Armillary Sphere & Counting Life Clock",
-	"file": "index.html",
-	"type": "web",
-	"version": 0,
-	"visibility": "public",
-	"workshopid": "0",
-	"menu": "settings",
-	"preview": "preview.gif",
-	"tags": ["Abstract"],
-	"title": "NguyenDevs - Armillary Sphere Wallpaper",
-	"ratingsex": "none",
-	"ratingviolence": "none",
-	"general": {
-		"supportsaudioprocessing": true,
-		"properties": {
-
-			"schemecolor": {
-				"order": 0,
-				"text": "ui_browse_properties_scheme_color",
-				"type": "color",
-				"value": "0.6627450980392157 0.1843137254901961 0.9372549019607843"
+	"contentrating" : "Everyone",
+	"description" : "NguyenDevs' Armillary Sphere & Counting Life Clock",
+	"file" : "index.html",
+	"general" : 
+	{
+		"supportsaudioprocessing" : true,
+		"properties" : 
+		{
+			"schemecolor" : 
+			{
+				"order" : 0,
+				"text" : "ui_browse_properties_scheme_color",
+				"type" : "color",
+				"value" : "0.6627450980392157 0.1843137254901961 0.9372549019607843"
 			},
-
-			"group_core": {
-				"index": 100,
-				"order": 100,
-				"text": "Core Settings",
-				"type": "group"
+			"group_core" : 
+			{
+				"index" : 100,
+				"order" : 100,
+				"text" : "Core Settings",
+				"type" : "group"
 			},
-			"corebrightness": {
-				"group": "group_core",
-				"index": 101,
-				"order": 101,
-				"text": "Brightness",
-				"type": "slider",
-				"min": 0.1,
-				"max": 3,
-				"step": 0.05,
-				"value": 0.5
+			"dirlight_intensity" : 
+			{
+				"group" : "group_core",
+				"index" : 101.1,
+				"max" : 10,
+				"min" : 0,
+				"order" : 101.1,
+				"step" : 0.1,
+				"text" : "Main Light",
+				"type" : "slider",
+				"value" : 2.2
 			},
-			"corespeed": {
-				"group": "group_core",
-				"index": 102,
-				"order": 102,
-				"text": "Speed",
-				"type": "slider",
-				"min": 0,
-				"max": 4,
-				"step": 0.05,
-				"value": 1
+			"filllight_intensity" : 
+			{
+				"group" : "group_core",
+				"index" : 101.2,
+				"max" : 10,
+				"min" : 0,
+				"order" : 101.2,
+				"step" : 0.1,
+				"text" : "Fill Light",
+				"type" : "slider",
+				"value" : 1.5
 			},
-			"corezoom": {
-				"group": "group_core",
-				"index": 103,
-				"order": 103,
-				"text": "Camera Distance",
-				"type": "slider",
-				"min": 5,
-				"max": 50,
-				"step": 1,
-				"value": 14
+			"pointlight_intensity" : 
+			{
+				"group" : "group_core",
+				"index" : 101.3,
+				"max" : 20,
+				"min" : 0,
+				"order" : 101.3,
+				"step" : 0.5,
+				"text" : "Point Light",
+				"type" : "slider",
+				"value" : 5
 			},
-			"coreoffsetx": {
-				"group": "group_core",
-				"index": 104,
-				"order": 104,
-				"text": "Horizontal Position",
-				"type": "slider",
-				"min": -20,
-				"max": 20,
-				"step": 0.1,
-				"value": -5
+			"corespeed" : 
+			{
+				"group" : "group_core",
+				"index" : 102,
+				"max" : 4,
+				"min" : 0,
+				"order" : 102,
+				"step" : 0.05,
+				"text" : "Speed",
+				"type" : "slider",
+				"value" : 1
 			},
-			"coreoffsety": {
-				"group": "group_core",
-				"index": 105,
-				"order": 105,
-				"text": "Vertical Position",
-				"type": "slider",
-				"min": -10,
-				"max": 10,
-				"step": 0.1,
-				"value": 0
+			"corezoom" : 
+			{
+				"group" : "group_core",
+				"index" : 103,
+				"max" : 50,
+				"min" : 5,
+				"order" : 103,
+				"step" : 1,
+				"text" : "Camera Distance",
+				"type" : "slider",
+				"value" : 14
 			},
-			"ringamount": {
-				"group": "group_core",
-				"index": 106,
-				"order": 106,
-				"text": "Ring Amount",
-				"type": "slider",
-				"min": 1,
-				"max": 8,
-				"step": 1,
-				"value": 4
+			"coreoffsetx" : 
+			{
+				"group" : "group_core",
+				"index" : 104,
+				"max" : 20,
+				"min" : -20,
+				"order" : 104,
+				"step" : 0.1,
+				"text" : "Horizontal Position",
+				"type" : "slider",
+				"value" : -5
 			},
-			"ringspacing": {
-				"group": "group_core",
-				"index": 107,
-				"order": 107,
-				"text": "Ring Spacing",
-				"type": "slider",
-				"min": 0.2,
-				"max": 3,
-				"step": 0.05,
-				"value": 1
+			"coreoffsety" : 
+			{
+				"group" : "group_core",
+				"index" : 105,
+				"max" : 10,
+				"min" : -10,
+				"order" : 105,
+				"step" : 0.1,
+				"text" : "Vertical Position",
+				"type" : "slider",
+				"value" : 0
 			},
-			"particleamount": {
-				"group": "group_core",
-				"index": 108,
-				"order": 108,
-				"text": "Particle Amount",
-				"type": "slider",
-				"min": 500,
-				"max": 10000,
-				"step": 500,
-				"value": 4500
+			"ringamount" : 
+			{
+				"group" : "group_core",
+				"index" : 106,
+				"max" : 8,
+				"min" : 1,
+				"order" : 106,
+				"step" : 1,
+				"text" : "Ring Amount",
+				"type" : "slider",
+				"value" : 4
 			},
-			"particlesize": {
-				"group": "group_core",
-				"index": 109,
-				"order": 109,
-				"text": "Particle Size",
-				"type": "slider",
-				"min": 0.01,
-				"max": 0.5,
-				"step": 0.01,
-				"value": 0.08
+			"particleamount" : 
+			{
+				"group" : "group_core",
+				"index" : 107,
+				"max" : 10000,
+				"min" : 500,
+				"order" : 107,
+				"step" : 500,
+				"text" : "Particle Amount",
+				"type" : "slider",
+				"value" : 4500
 			},
-			"debrisamount": {
-				"group": "group_core",
-				"index": 110,
-				"order": 110,
-				"text": "Polygons Amount",
-				"type": "slider",
-				"min": 0,
-				"max": 100,
-				"step": 5,
-				"value": 30
+			"particlesize" : 
+			{
+				"group" : "group_core",
+				"index" : 108,
+				"max" : 0.5,
+				"min" : 0.01,
+				"order" : 108,
+				"step" : 0.01,
+				"text" : "Particle Size",
+				"type" : "slider",
+				"value" : 0.08
 			},
-			"debrissize": {
-				"group": "group_core",
-				"index": 111,
-				"order": 111,
-				"text": "Polygons Size",
-				"type": "slider",
-				"min": 0.1,
-				"max": 3,
-				"step": 0.1,
-				"value": 1
+			"debrisamount" : 
+			{
+				"group" : "group_core",
+				"index" : 109,
+				"max" : 100,
+				"min" : 0,
+				"order" : 109,
+				"step" : 5,
+				"text" : "Polygons Amount",
+				"type" : "slider",
+				"value" : 30
 			},
-			"glowsize": {
-				"group": "group_core",
-				"index": 112,
-				"order": 112,
-				"text": "Glow Size",
-				"type": "slider",
-				"min": 0.1,
-				"max": 3,
-				"step": 0.1,
-				"value": 0.6
+			"debrissize" : 
+			{
+				"group" : "group_core",
+				"index" : 110,
+				"max" : 3,
+				"min" : 0.1,
+				"order" : 110,
+				"step" : 0.1,
+				"text" : "Polygons Size",
+				"type" : "slider",
+				"value" : 1
 			},
-			"glowintensity": {
-				"group": "group_core",
-				"index": 113,
-				"order": 113,
-				"text": "Glow Intensity",
-				"type": "slider",
-				"min": 0,
-				"max": 5,
-				"step": 0.1,
-				"value": 1
+			"glowsize" : 
+			{
+				"group" : "group_core",
+				"index" : 111,
+				"max" : 3,
+				"min" : 0.1,
+				"order" : 111,
+				"step" : 0.1,
+				"text" : "Glow Size",
+				"type" : "slider",
+				"value" : 0.6
 			},
-
-			"group_background": {
-				"index": 150,
-				"order": 150,
-				"text": "Background",
-				"type": "group"
+			"glowintensity" : 
+			{
+				"group" : "group_core",
+				"index" : 112,
+				"max" : 5,
+				"min" : 0,
+				"order" : 112,
+				"step" : 0.1,
+				"text" : "Glow Intensity",
+				"type" : "slider",
+				"value" : 1
 			},
-			"endsky_hole_size": {
-				"group": "group_background",
-				"index": 151,
-				"order": 151,
-				"text": "Size",
-				"type": "slider",
-				"min": 10,
-				"max": 300,
-				"step": 1,
-				"value": 80
+			"ringspacing" : 
+			{
+				"group" : "group_core",
+				"index" : 113,
+				"max" : 3,
+				"min" : 0.2,
+				"order" : 113,
+				"step" : 0.05,
+				"text" : "Ring Spacing",
+				"type" : "slider",
+				"value" : 1
 			},
-			"endsky_zoom": {
-				"group": "group_background",
-				"index": 152,
-				"order": 152,
-				"text": "Zoom",
-				"type": "slider",
-				"min": 0.1,
-				"max": 5,
-				"step": 0.05,
-				"value": 1
+			"group_background" : 
+			{
+				"index" : 150,
+				"order" : 150,
+				"text" : "Background",
+				"type" : "group"
 			},
-			"endsky_iterations": {
-				"group": "group_background",
-				"index": 153,
-				"order": 153,
-				"text": "Iterations",
-				"type": "slider",
-				"min": 1,
-				"max": 32,
-				"step": 1,
-				"value": 16
+			"endsky_hole_size" : 
+			{
+				"group" : "group_background",
+				"index" : 151,
+				"max" : 300,
+				"min" : 10,
+				"order" : 151,
+				"step" : 1,
+				"text" : "Size",
+				"type" : "slider",
+				"value" : 80
 			},
-
-			"group_clock": {
-				"index": 200,
-				"order": 200,
-				"text": "Clock & UI",
-				"type": "group"
+			"endsky_zoom" : 
+			{
+				"group" : "group_background",
+				"index" : 152,
+				"max" : 5,
+				"min" : 0.1,
+				"order" : 152,
+				"step" : 0.05,
+				"text" : "Zoom",
+				"type" : "slider",
+				"value" : 1
 			},
-			"clockenable": {
-				"group": "group_clock",
-				"index": 201,
-				"order": 201,
-				"text": "Enable Clock",
-				"type": "bool",
-				"value": true
+			"endsky_iterations" : 
+			{
+				"group" : "group_background",
+				"index" : 153,
+				"max" : 32,
+				"min" : 1,
+				"order" : 153,
+				"step" : 1,
+				"text" : "Iterations",
+				"type" : "slider",
+				"value" : 16
 			},
-			"clockmode": {
-				"group": "group_clock",
-				"index": 202,
-				"order": 202,
-				"text": "Display Mode",
-				"type": "combo",
-				"options": [
-					{ "label": "Birthday", "value": 0 },
-					{ "label": "Current", "value": 1 }
+			"group_clock" : 
+			{
+				"index" : 200,
+				"order" : 200,
+				"text" : "Clock & UI",
+				"type" : "group"
+			},
+			"clockenable" : 
+			{
+				"group" : "group_clock",
+				"index" : 200.5,
+				"order" : 200.5,
+				"text" : "Enable Clock",
+				"type" : "bool",
+				"value" : true
+			},
+			"clockmode" : 
+			{
+				"group" : "group_clock",
+				"index" : 201,
+				"options" : 
+				[
+					{
+						"label" : "Birthday",
+						"value" : 0
+					},
+					{
+						"label" : "Current",
+						"value" : 1
+					}
 				],
-				"value": 0
+				"order" : 201,
+				"text" : "Display Mode",
+				"type" : "combo",
+				"value" : 0
 			},
-			"birthdate": {
-				"group": "group_clock",
-				"index": 203,
-				"order": 203,
-				"text": "Birth Date",
-				"type": "textinput",
-				"value": "2004-07-04T09:00:00+07:00"
+			"birthdate" : 
+			{
+				"group" : "group_clock",
+				"index" : 202,
+				"order" : 202,
+				"text" : "Birth Date",
+				"type" : "textinput",
+				"value" : "2004-07-04T09:00:00+07:00"
 			},
-			"clockoffsetx": {
-				"group": "group_clock",
-				"index": 204,
-				"order": 204,
-				"text": "Horizontal Position",
-				"type": "slider",
-				"min": 0,
-				"max": 100,
-				"step": 1,
-				"value": 11
+			"clockoffsetx" : 
+			{
+				"group" : "group_clock",
+				"index" : 203,
+				"max" : 100,
+				"min" : 0,
+				"order" : 203,
+				"step" : 1,
+				"text" : "Horizontal Position",
+				"type" : "slider",
+				"value" : 11
 			},
-			"clockoffsety": {
-				"group": "group_clock",
-				"index": 205,
-				"order": 205,
-				"text": "Vertical Position",
-				"type": "slider",
-				"min": 0,
-				"max": 100,
-				"step": 1,
-				"value": 50
+			"clockoffsety" : 
+			{
+				"group" : "group_clock",
+				"index" : 204,
+				"max" : 100,
+				"min" : 0,
+				"order" : 204,
+				"step" : 1,
+				"text" : "Vertical Position",
+				"type" : "slider",
+				"value" : 50
 			},
-			"clockblur": {
-				"group": "group_clock",
-				"index": 206,
-				"order": 206,
-				"text": "Blur Effect",
-				"type": "slider",
-				"min": 0,
-				"max": 50,
-				"step": 1,
-				"value": 2
+			"clockblur" : 
+			{
+				"group" : "group_clock",
+				"index" : 205,
+				"max" : 50,
+				"min" : 0,
+				"order" : 205,
+				"step" : 1,
+				"text" : "Blur Effect",
+				"type" : "slider",
+				"value" : 2
 			},
-
-			"group_text": {
-				"index": 300,
-				"order": 300,
-				"text": "Labels",
-				"type": "group"
+			"group_text" : 
+			{
+				"index" : 300,
+				"order" : 300,
+				"text" : "Labels",
+				"type" : "group"
 			},
-			"timerlabeltop": {
-				"group": "group_text",
-				"index": 301,
-				"order": 301,
-				"text": "Top Label",
-				"type": "textinput",
-				"value": "nguyendevs has joined the Earth server"
+			"timerlabeltop" : 
+			{
+				"group" : "group_text",
+				"index" : 301,
+				"order" : 301,
+				"text" : "Top Label",
+				"type" : "textinput",
+				"value" : "nguyendevs has joined the Earth server"
 			},
-			"timertotallabel": {
-				"group": "group_text",
-				"index": 302,
-				"order": 302,
-				"text": "Total Seconds",
-				"type": "textinput",
-				"value": "TOTAL SECONDS PLAYED"
+			"timertotallabel" : 
+			{
+				"group" : "group_text",
+				"index" : 302,
+				"order" : 302,
+				"text" : "Total Seconds",
+				"type" : "textinput",
+				"value" : "TOTAL SECONDS PLAYED"
 			},
-			"yearlabeltext": {
-				"group": "group_text",
-				"index": 303,
-				"order": 303,
-				"text": "Year Label",
-				"type": "textinput",
-				"value": "Year"
+			"yearlabeltext" : 
+			{
+				"group" : "group_text",
+				"index" : 303,
+				"order" : 303,
+				"text" : "Year Label",
+				"type" : "textinput",
+				"value" : "Year"
 			},
-			"currenttimelabel": {
-				"group": "group_text",
-				"index": 304,
-				"order": 304,
-				"text": "Current Time",
-				"type": "textinput",
-				"value": "Current Time"
+			"currenttimelabel" : 
+			{
+				"group" : "group_text",
+				"index" : 304,
+				"order" : 304,
+				"text" : "Current Time",
+				"type" : "textinput",
+				"value" : "Current Time"
 			},
-			"dayprogresslabel": {
-				"group": "group_text",
-				"index": 305,
-				"order": 305,
-				"text": "Day Progress",
-				"type": "textinput",
-				"value": "Day Progress"
+			"dayprogresslabel" : 
+			{
+				"group" : "group_text",
+				"index" : 305,
+				"order" : 305,
+				"text" : "Day Progress",
+				"type" : "textinput",
+				"value" : "Day Progress"
 			},
-			"label_year": {
-				"group": "group_text",
-				"index": 306,
-				"order": 306,
-				"text": "Year",
-				"type": "textinput",
-				"value": "Year"
+			"label_year" : 
+			{
+				"group" : "group_text",
+				"index" : 306,
+				"order" : 306,
+				"text" : "Year",
+				"type" : "textinput",
+				"value" : "Year"
 			},
-			"label_month": {
-				"group": "group_text",
-				"index": 307,
-				"order": 307,
-				"text": "Month",
-				"type": "textinput",
-				"value": "Month"
+			"label_month" : 
+			{
+				"group" : "group_text",
+				"index" : 307,
+				"order" : 307,
+				"text" : "Month",
+				"type" : "textinput",
+				"value" : "Month"
 			},
-			"label_day": {
-				"group": "group_text",
-				"index": 308,
-				"order": 308,
-				"text": "Day",
-				"type": "textinput",
-				"value": "Day"
+			"label_day" : 
+			{
+				"group" : "group_text",
+				"index" : 308,
+				"order" : 308,
+				"text" : "Day",
+				"type" : "textinput",
+				"value" : "Day"
 			},
-			"label_hour": {
-				"group": "group_text",
-				"index": 309,
-				"order": 309,
-				"text": "Hour",
-				"type": "textinput",
-				"value": "Hour"
+			"label_hour" : 
+			{
+				"group" : "group_text",
+				"index" : 309,
+				"order" : 309,
+				"text" : "Hour",
+				"type" : "textinput",
+				"value" : "Hour"
 			},
-			"label_minute": {
-				"group": "group_text",
-				"index": 310,
-				"order": 310,
-				"text": "Minute",
-				"type": "textinput",
-				"value": "Minute"
+			"label_minute" : 
+			{
+				"group" : "group_text",
+				"index" : 310,
+				"order" : 310,
+				"text" : "Minute",
+				"type" : "textinput",
+				"value" : "Minute"
 			},
-			"label_second": {
-				"group": "group_text",
-				"index": 311,
-				"order": 311,
-				"text": "Second",
-				"type": "textinput",
-				"value": "Second"
+			"label_second" : 
+			{
+				"group" : "group_text",
+				"index" : 311,
+				"order" : 311,
+				"text" : "Second",
+				"type" : "textinput",
+				"value" : "Second"
 			},
-
-			"group_mouse": {
-				"index": 400,
-				"order": 400,
-				"text": "Mouse Settings",
-				"type": "group"
+			"group_mouse" : 
+			{
+				"index" : 400,
+				"order" : 400,
+				"text" : "Mouse Settings",
+				"type" : "group"
 			},
-			"mousedrag": {
-				"group": "group_mouse",
-				"index": 401,
-				"order": 401,
-				"text": "Drag",
-				"type": "bool",
-				"value": true
+			"mousedrag" : 
+			{
+				"group" : "group_mouse",
+				"index" : 401,
+				"order" : 401,
+				"text" : "Drag",
+				"type" : "bool",
+				"value" : true
 			},
-			"mousefollow": {
-				"group": "group_mouse",
-				"index": 402,
-				"order": 402,
-				"text": "Follow Mouse",
-				"type": "bool",
-				"value": false
+			"mousefollow" : 
+			{
+				"group" : "group_mouse",
+				"index" : 402,
+				"order" : 402,
+				"text" : "Follow Mouse",
+				"type" : "bool",
+				"value" : false
 			},
-			"mouseweight": {
-				"group": "group_mouse",
-				"index": 403,
-				"order": 403,
-				"text": "Weight",
-				"type": "slider",
-				"min": 1,
-				"max": 100,
-				"step": 1,
-				"value": 100
+			"mouseweight" : 
+			{
+				"group" : "group_mouse",
+				"index" : 403,
+				"max" : 100,
+				"min" : 1,
+				"order" : 403,
+				"step" : 1,
+				"text" : "Weight",
+				"type" : "slider",
+				"value" : 100
 			},
-
-			"group_music": {
-				"index": 500,
-				"order": 500,
-				"text": "Sound Visualizer",
-				"type": "group"
+			"group_music" : 
+			{
+				"index" : 500,
+				"order" : 500,
+				"text" : "Sound Visualizer",
+				"type" : "group"
 			},
-			"musicenable": {
-				"group": "group_music",
-				"index": 501,
-				"order": 501,
-				"text": "Enable",
-				"type": "bool",
-				"value": true
+			"musicenable" : 
+			{
+				"group" : "group_music",
+				"index" : 501,
+				"order" : 501,
+				"text" : "Enable",
+				"type" : "bool",
+				"value" : true
 			},
-			"musicsensitive": {
-				"group": "group_music",
-				"index": 502,
-				"order": 502,
-				"text": "Sensitive",
-				"type": "slider",
-				"min": 1,
-				"max": 100,
-				"step": 1,
-				"value": 50
+			"musicsensitive" : 
+			{
+				"group" : "group_music",
+				"index" : 502,
+				"max" : 100,
+				"min" : 1,
+				"order" : 502,
+				"step" : 1,
+				"text" : "Sensitive",
+				"type" : "slider",
+				"value" : 50
 			},
-			"musicstyle": {
-				"group": "group_music",
-				"index": 503,
-				"order": 503,
-				"text": "Style",
-				"type": "combo",
-				"options": [
-					{ "label": "Tectonic", "value": "tectonic" },
-					{ "label": "Wave", "value": "wave" },
-					{ "label": "Ripple", "value": "ripple" }
+			"musicstyle" : 
+			{
+				"group" : "group_music",
+				"index" : 503,
+				"options" : 
+				[
+					{
+						"label" : "Tectonic",
+						"value" : "tectonic"
+					},
+					{
+						"label" : "Wave",
+						"value" : "wave"
+					},
+					{
+						"label" : "Ripple",
+						"value" : "ripple"
+					}
 				],
-				"value": "tectonic"
+				"order" : 503,
+				"text" : "Style",
+				"type" : "combo",
+				"value" : "tectonic"
 			}
-
 		}
-	}
+	},
+	"menu" : "settings",
+	"preview" : "preview.gif",
+	"ratingsex" : "none",
+	"ratingviolence" : "none",
+	"tags" : [ "Abstract" ],
+	"title" : "NguyenDevs - Armillary Sphere Wallpaper",
+	"type" : "web",
+	"version" : 0,
+	"visibility" : "public",
+	"workshopid" : "0"
 }

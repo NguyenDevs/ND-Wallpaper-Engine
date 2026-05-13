@@ -29,13 +29,14 @@ class AuraSystem {
     const cfg = window.wallpaperConfig || {};
     const glowSize = cfg.glowSize ?? 1.0;
     const glowIntensity = cfg.glowIntensity ?? 1.0;
+    const ptIntensity = cfg.pointLightIntensity ?? 5.0;
 
     if (musicEnable) {
-      coreLight.intensity = (0.8 + audioIntensity * 35) * coreIntro * glowIntensity;
+      coreLight.intensity = (0.2 + audioIntensity * 8) * coreIntro * ptIntensity;
       this.glowOrb.scale.setScalar((6.0 + audioIntensity * 2) * (0.2 + 0.8 * coreIntro) * glowSize);
       this.blackHole.scale.setScalar(Math.max(0.35, 1.0 - audioIntensity * 0.8));
     } else {
-      coreLight.intensity = (4 + Math.sin(t * 2) * 2) * coreIntro * glowIntensity;
+      coreLight.intensity = (0.8 + Math.sin(t * 2) * 0.4) * coreIntro * ptIntensity;
       this.glowOrb.scale.setScalar((6.5 + Math.sin(t * 3) * 0.8) * (0.2 + 0.8 * coreIntro) * glowSize);
       this.blackHole.scale.setScalar(1.0);
       this.bhGlow.scale.setScalar(1.2 * glowSize);

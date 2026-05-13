@@ -43,12 +43,12 @@ class RingSystem {
     const group = new THREE.Group();
     const fragments = [];
     const stoneMat = new THREE.MeshPhysicalMaterial({
-      color: 0x1a0b3a, emissive: 0x110522, emissiveIntensity: 0.4,
-      metalness: 1.0, roughness: 0.1, clearcoat: 1.0, flatShading: true,
+       color: 0x140528, emissive: 0x0a0011, emissiveIntensity: 0.3,
+      metalness: 1.0, roughness: 0.25, clearcoat: 0.5, flatShading: false,
     });
     const bevelMat = new THREE.MeshPhysicalMaterial({
       color: 0x140528, emissive: 0x0a0011, emissiveIntensity: 0.3,
-      metalness: 1.0, roughness: 0.3, clearcoat: 0.5, flatShading: true,
+      metalness: 1.0, roughness: 0.25, clearcoat: 0.5, flatShading: false,
     });
     const materials = [stoneMat, bevelMat];
     const totalArc = Math.PI * 2, arcLength = totalArc / fragmentsCount - gap;

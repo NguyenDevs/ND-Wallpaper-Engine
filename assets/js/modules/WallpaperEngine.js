@@ -97,7 +97,10 @@ class WallpaperEngine {
     this.debris.update(this.t, speedProp);
     this.particles.update(this.t, speedProp, audioIntensity, cfg.musicEnable);
 
-    this.sceneManager.renderer.toneMappingExposure = cfg.exposure ?? 1.0;
+    this.sceneManager.ambientLight.intensity = 0.6;
+    this.sceneManager.dirLight.intensity = cfg.dirLightIntensity ?? 2.2;
+    this.sceneManager.fillLight.intensity = cfg.fillLightIntensity ?? 1.5;
+
     this.sceneManager.render();
   }
 }

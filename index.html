@@ -135,7 +135,9 @@
   
   <script>
     window.wallpaperConfig = {
-      exposure: 0.5,
+      dirLightIntensity: 2.2,
+      fillLightIntensity: 1.5,
+      pointLightIntensity: 5.0,
       speed: 1.0,
       zoom: 18,
       offsetX: -4.5,
@@ -282,7 +284,9 @@
 
     window.wallpaperPropertyListener = {
       applyUserProperties: function(properties) {
-        if (properties.corebrightness) window.wallpaperConfig.exposure = properties.corebrightness.value;
+        if (properties.dirlight_intensity) window.wallpaperConfig.dirLightIntensity = properties.dirlight_intensity.value;
+        if (properties.filllight_intensity) window.wallpaperConfig.fillLightIntensity = properties.filllight_intensity.value;
+        if (properties.pointlight_intensity) window.wallpaperConfig.pointLightIntensity = properties.pointlight_intensity.value;
         if (properties.corespeed) window.wallpaperConfig.speed = properties.corespeed.value;
         if (properties.corezoom) window.wallpaperConfig.zoom = properties.corezoom.value;
         if (properties.ringspacing) { window.wallpaperConfig.ringSpacing = properties.ringspacing.value; window.dispatchEvent(new CustomEvent('threejs-update', {detail: {type:'rings'}})); }
