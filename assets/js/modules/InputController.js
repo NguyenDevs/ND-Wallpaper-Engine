@@ -137,11 +137,11 @@ class InputController {
     const cfg = window.wallpaperConfig || {};
     const weight = cfg.mouseWeight ?? 50;
     const sens = 0.012 * (1.05 - weight / 100);
-    const damp = 0.94 + (weight / 100) * 0.056;
+    const damp = 0.96 + (weight / 100) * 0.038;
 
     if (!this.drag.active) {
       const speed = Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y);
-      if (speed > 0.08) {
+      if (speed > 0.01) {
         this.rotQ.premultiply(
           new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(this.velocity.y, this.velocity.x, 0).normalize(), speed * sens)
         );
