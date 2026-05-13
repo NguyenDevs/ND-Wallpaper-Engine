@@ -8,26 +8,38 @@ class RingSystem {
   setupRings() {
     this.rings.forEach((r) => this.parentGroup.remove(r.obj));
     const amount = window.wallpaperConfig?.ringAmount ?? 4;
+    const spacing = window.wallpaperConfig?.ringSpacing ?? 1.0;
+
     const ringConfigs = [
-      { r1: 3.0, r2: 3.6, d: 0.6, s: 0.007, a: new THREE.Vector3(1, 0.5, 0.2), skip: [{ skip: 1, prob: 20 }, { skip: 0, prob: 80 }] },
-      { r1: 4.2, r2: 5.0, d: 0.8, s: -0.004, a: new THREE.Vector3(-0.5, 1, 0.5), skip: [{ skip: 1, prob: 30 }, { skip: 0, prob: 70 }] },
-      { r1: 5.6, r2: 6.6, d: 1.2, s: 0.003, a: new THREE.Vector3(0.2, -0.5, 1), skip: [{ skip: 1, prob: 30 }, { skip: 2, prob: 20 }, { skip: 0, prob: 50 }] },
-      { r1: 7.2, r2: 8.4, d: 1.4, s: -0.002, a: new THREE.Vector3(0.5, 0.8, -0.3), skip: [{ skip: 1, prob: 30 }, { skip: 2, prob: 20 }, { skip: 3, prob: 10 }, { skip: 0, prob: 40 }] },
-      { r1: 8.8, r2: 10.2, d: 1.6, s: 0.001, a: new THREE.Vector3(0.1, 1, 0.4), skip: [{ skip: 1, prob: 30 }, { skip: 2, prob: 10 }, { skip: 0, prob: 60 }] },
-      { r1: 10.6, r2: 12.2, d: 1.8, s: -0.005, a: new THREE.Vector3(0.8, 0.2, 1), skip: [{ skip: 1, prob: 30 }, { skip: 2, prob: 10 }, { skip: 0, prob: 60 }] },
-      { r1: 12.6, r2: 14.4, d: 2.0, s: 0.006, a: new THREE.Vector3(-1, -0.5, 0.3), skip: [{ skip: 1, prob: 30 }, { skip: 2, prob: 10 }, { skip: 0, prob: 60 }] },
-      { r1: 14.8, r2: 16.8, d: 2.2, s: -0.003, a: new THREE.Vector3(0.3, -1, 0.6), skip: [{ skip: 1, prob: 30 }, { skip: 2, prob: 10 }, { skip: 0, prob: 60 }] },
+      { w: 0.6, d: 0.6, s: 0.007, a: new THREE.Vector3(1, 0.5, 0.2), skip: [{ skip: 1, prob: 20 }, { skip: 0, prob: 80 }] },
+      { w: 0.8, d: 0.8, s: -0.004, a: new THREE.Vector3(-0.5, 1, 0.5), skip: [{ skip: 1, prob: 30 }, { skip: 0, prob: 70 }] },
+      { w: 1.0, d: 1.2, s: 0.003, a: new THREE.Vector3(0.2, -0.5, 1), skip: [{ skip: 1, prob: 30 }, { skip: 2, prob: 20 }, { skip: 0, prob: 50 }] },
+      { w: 1.2, d: 1.4, s: -0.002, a: new THREE.Vector3(0.5, 0.8, -0.3), skip: [{ skip: 1, prob: 30 }, { skip: 2, prob: 20 }, { skip: 3, prob: 10 }, { skip: 0, prob: 40 }] },
+      { w: 1.4, d: 1.6, s: 0.001, a: new THREE.Vector3(0.1, 1, 0.4), skip: [{ skip: 1, prob: 30 }, { skip: 2, prob: 10 }, { skip: 0, prob: 60 }] },
+      { w: 1.6, d: 1.8, s: -0.005, a: new THREE.Vector3(0.8, 0.2, 1), skip: [{ skip: 1, prob: 30 }, { skip: 2, prob: 10 }, { skip: 0, prob: 60 }] },
+      { w: 1.8, d: 2.0, s: 0.006, a: new THREE.Vector3(-1, -0.5, 0.3), skip: [{ skip: 1, prob: 30 }, { skip: 2, prob: 10 }, { skip: 0, prob: 60 }] },
+      { w: 2.0, d: 2.2, s: -0.003, a: new THREE.Vector3(0.3, -1, 0.6), skip: [{ skip: 1, prob: 30 }, { skip: 2, prob: 10 }, { skip: 0, prob: 60 }] },
     ];
+
     this.rings = [];
+    let currentR2 = 2.4; 
     for (let i = 0; i < amount; i++) {
       const c = ringConfigs[i % ringConfigs.length];
-      const r = this.createFragmentedRing(c.r1, c.r2, c.d, 3 + (i % 4), c.s, c.a, this.getSkipIndices(3 + (i % 4), c.skip));
+      const ringGap = 0.6 * spacing;
+      const r1 = currentR2 + ringGap;
+      const r2 = r1 + c.w;
+      currentR2 = r2;
+
+      // Adjust fragment gap to "fit" the space (longer fragments when spacing is larger)
+      const fragmentGap = 0.3 / Math.sqrt(spacing);
+
+      const r = this.createFragmentedRing(r1, r2, c.d, 3 + (i % 4), c.s, c.a, this.getSkipIndices(3 + (i % 4), c.skip), fragmentGap);
       this.rings.push(r);
       this.parentGroup.add(r.obj);
     }
   }
 
-  createFragmentedRing(innerR, outerR, depth, fragmentsCount, rotSpeed, axis, hiddenIndices = null) {
+  createFragmentedRing(innerR, outerR, depth, fragmentsCount, rotSpeed, axis, hiddenIndices = null, gap = 0.3) {
     const group = new THREE.Group();
     const fragments = [];
     const stoneMat = new THREE.MeshPhysicalMaterial({
@@ -39,7 +51,7 @@ class RingSystem {
       metalness: 0.8, roughness: 0.3, clearcoat: 0.5, flatShading: true,
     });
     const materials = [stoneMat, bevelMat];
-    const gap = 0.3, totalArc = Math.PI * 2, arcLength = totalArc / fragmentsCount - gap;
+    const totalArc = Math.PI * 2, arcLength = totalArc / fragmentsCount - gap;
     let skipArr = hiddenIndices || [];
     if (!hiddenIndices) {
       const maxSkip = fragmentsCount <= 3 ? 1 : 2;
