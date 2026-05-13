@@ -192,29 +192,11 @@
 				"type" : "combo",
 				"value" : 0
 			},
-			"clock24h" : 
+			"birthdate" : 
 			{
 				"group" : "group_clock",
 				"index" : 202,
 				"order" : 202,
-				"text" : "24h Format",
-				"type" : "bool",
-				"value" : true
-			},
-			"clockshowseconds" : 
-			{
-				"group" : "group_clock",
-				"index" : 203,
-				"order" : 203,
-				"text" : "Show Seconds",
-				"type" : "bool",
-				"value" : true
-			},
-			"birthdate" : 
-			{
-				"group" : "group_clock",
-				"index" : 204,
-				"order" : 204,
 				"text" : "Birth Date",
 				"type" : "textinput",
 				"value" : "2004-07-04T09:00:00+07:00"
@@ -222,10 +204,10 @@
 			"clockoffsetx" : 
 			{
 				"group" : "group_clock",
-				"index" : 205,
+				"index" : 203,
 				"max" : 100,
 				"min" : 0,
-				"order" : 205,
+				"order" : 203,
 				"step" : 1,
 				"text" : "Clock Horizontal Position (%)",
 				"type" : "slider",
@@ -234,10 +216,10 @@
 			"clockoffsety" : 
 			{
 				"group" : "group_clock",
-				"index" : 206,
+				"index" : 204,
 				"max" : 100,
 				"min" : 0,
-				"order" : 206,
+				"order" : 204,
 				"step" : 1,
 				"text" : "Clock Vertical Position (%)",
 				"type" : "slider",
@@ -246,10 +228,10 @@
 			"clockblur" : 
 			{
 				"group" : "group_clock",
-				"index" : 207,
+				"index" : 205,
 				"max" : 50,
 				"min" : 0,
-				"order" : 207,
+				"order" : 205,
 				"step" : 1,
 				"text" : "Background Blur (px)",
 				"type" : "slider",
@@ -289,11 +271,29 @@
 				"type" : "textinput",
 				"value" : "Year"
 			},
-			"label_year" : 
+			"currenttimelabel" : 
 			{
 				"group" : "group_text",
 				"index" : 304,
 				"order" : 304,
+				"text" : "Current Time Label",
+				"type" : "textinput",
+				"value" : "Current Time"
+			},
+			"dayprogresslabel" : 
+			{
+				"group" : "group_text",
+				"index" : 305,
+				"order" : 305,
+				"text" : "Day Progress Label",
+				"type" : "textinput",
+				"value" : "Day Progress"
+			},
+			"label_year" : 
+			{
+				"group" : "group_text",
+				"index" : 306,
+				"order" : 306,
 				"text" : "Year",
 				"type" : "textinput",
 				"value" : "Year"
@@ -301,8 +301,8 @@
 			"label_month" : 
 			{
 				"group" : "group_text",
-				"index" : 305,
-				"order" : 305,
+				"index" : 307,
+				"order" : 307,
 				"text" : "Month",
 				"type" : "textinput",
 				"value" : "Month"
@@ -310,8 +310,8 @@
 			"label_day" : 
 			{
 				"group" : "group_text",
-				"index" : 306,
-				"order" : 306,
+				"index" : 308,
+				"order" : 308,
 				"text" : "Day",
 				"type" : "textinput",
 				"value" : "Day"
@@ -319,8 +319,8 @@
 			"label_hour" : 
 			{
 				"group" : "group_text",
-				"index" : 307,
-				"order" : 307,
+				"index" : 309,
+				"order" : 309,
 				"text" : "Hour",
 				"type" : "textinput",
 				"value" : "Hour"
@@ -328,8 +328,8 @@
 			"label_minute" : 
 			{
 				"group" : "group_text",
-				"index" : 308,
-				"order" : 308,
+				"index" : 310,
+				"order" : 310,
 				"text" : "Minute",
 				"type" : "textinput",
 				"value" : "Minute"
@@ -337,8 +337,8 @@
 			"label_second" : 
 			{
 				"group" : "group_text",
-				"index" : 309,
-				"order" : 309,
+				"index" : 311,
+				"order" : 311,
 				"text" : "Second",
 				"type" : "textinput",
 				"value" : "Second"
@@ -378,7 +378,7 @@
 				"step" : 1,
 				"text" : "Weight",
 				"type" : "slider",
-				"value" : 50
+				"value" : 100
 			},
 			"group_music" : 
 			{
