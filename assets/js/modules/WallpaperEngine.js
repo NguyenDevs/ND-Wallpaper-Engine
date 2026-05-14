@@ -53,23 +53,42 @@ class WallpaperEngine {
   }
 
   updateAudioIntensity(cfg) {
-    const audio = window._wallpaperAudioData;
-    if (cfg.musicEnable && audio && audio.length > 0) {
-      let bass = 0; for (let j = 0; j < 12; j++) bass += audio[j];
-      bass = (bass / 12) * ((cfg.musicSensitive ?? 50) / 100) * 7.0;
+  const audio = window._wallpaperAudioData;
+  if (cfg.musicEnable && audio && audio.length > 0) {
+    // Bass: bins 0-11
+    let bass = 0;
+    for (let j = 0; j < 12; j++) bass += audio[j];
+    bass /= 12;
 
-      let mid = 0; for (let j = 12; j < 48; j++) mid += audio[j];
-      mid = (mid / 36) * ((cfg.musicSensitive ?? 50) / 100) * 3.0;
+    // Mid: bins 12-47
+    let mid = 0;
+    for (let j = 12; j < 48; j++) mid += audio[j];
+    mid /= 36;
 
-      const target = bass * 0.8 + mid * 0.2;
-      const attack = 0.45, decay = 0.12;
-      if (target > this.smoothAudioIntensity) this.smoothAudioIntensity += (target - this.smoothAudioIntensity) * attack;
-      else this.smoothAudioIntensity += (target - this.smoothAudioIntensity) * decay;
+    // High: bins 48-63
+    let high = 0;
+    for (let j = 48; j < 64; j++) high += audio[j];
+    high /= 16;
+
+    const sens = (cfg.musicSensitive ?? 50) / 50; 
+    const raw = (bass * 0.6 + mid * 0.3 + high * 0.1) * sens * 4.5;
+
+    // Soft-clamp
+    const clamped = Math.tanh(raw * 0.8) * 1.35;
+
+    // Asymmetric smoothing
+    const attack = 0.18;   
+    const decay  = 0.06; 
+    if (clamped > this.smoothAudioIntensity) {
+      this.smoothAudioIntensity += (clamped - this.smoothAudioIntensity) * attack;
     } else {
-      this.smoothAudioIntensity = 0;
+      this.smoothAudioIntensity += (clamped - this.smoothAudioIntensity) * decay;
     }
-    return this.smoothAudioIntensity;
+  } else {
+    this.smoothAudioIntensity *= 0.94; 
   }
+  return this.smoothAudioIntensity;
+}
 
   animate() {
     window._threejsRafId = requestAnimationFrame(() => this.animate());
