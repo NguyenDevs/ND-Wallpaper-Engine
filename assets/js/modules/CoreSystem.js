@@ -1,13 +1,16 @@
 class CoreSystem {
   constructor(parentGroup) {
     this.group = new THREE.Group();
-    this.group.rotation.x = 0.15;
-    this.group.rotation.y = -0.25;
     parentGroup.add(this.group);
 
+    this.rotGroup = new THREE.Group();
+    this.rotGroup.rotation.x = 0.15;
+    this.rotGroup.rotation.y = -0.25;
+    this.group.add(this.rotGroup);
+
     this.RADIUS = 1.4;
-    this.mesh = new CoreMesh(this.group, this.RADIUS);
-    this.filaments = new FilamentSystem(this.group);
+    this.mesh = new CoreMesh(this.rotGroup, this.RADIUS);
+    this.filaments = new FilamentSystem(this.rotGroup);
     this.aura = new AuraSystem(this.group);
 
     this.userData = { smoothM: 0, targetM: 0, nextPickTime: 0 };
@@ -33,8 +36,8 @@ class CoreSystem {
     this.aura.update(t, coreIntro, audioIntensity, musicEnable, coreLight);
 
     const coreRotSpeed = 0.01 * (0.1 + 0.3 * coreIntro) * (0.5 + 0.5 * speedProp);
-    this.group.rotation.y += coreRotSpeed;
-    this.group.rotation.z = Math.sin(t * 0.5) * 0.2 * coreIntro;
+    this.rotGroup.rotation.y += coreRotSpeed;
+    this.rotGroup.rotation.z = Math.sin(t * 0.5) * 0.2 * coreIntro;
     this.group.scale.setScalar(0.25 + 0.75 * ringIntro);
   }
 }
