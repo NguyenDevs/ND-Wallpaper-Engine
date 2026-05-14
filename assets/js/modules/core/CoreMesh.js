@@ -108,22 +108,29 @@ class CoreMesh {
       const theta = this.thetaArr[i], phi = this.phiArr[i];
 
       if (musicEnable) {
-        let r = 1.0;
-        const style = (musicStyle || 'tectonic').toLowerCase();
-        if (style === 'tectonic') {
-          const n1 = Math.sin(5 * theta) * Math.cos(5 * phi);
-          const n2 = Math.sin(12 * theta + t) * Math.cos(12 * phi - t);
-          const dr = n1 * 0.6 + n2 * 0.25;
-          r = 1.0 + dr * audioIntensity;
-        } else if (style === 'wave') {
-          const dr = 0.5 * Math.sin(3.5 * theta - t * 2.0);
-          r = 1.0 + dr * audioIntensity;
-        } else if (style === 'ripple') {
-          const dr = 0.45 * Math.sin(8.0 * phi - t * 3.0);
-          r = 1.0 + dr * audioIntensity;
-        }
-        positions[idx] = bx * r; positions[idx + 1] = by * r; positions[idx + 2] = bz * r;
-      } else {
+  let r = 1.0;
+  const style = (musicStyle || 'tectonic').toLowerCase();
+  const tSmooth = t * 0.6;
+  
+  if (style === 'tectonic') {
+    const n1 = Math.sin(4 * theta + tSmooth * 0.5) * Math.cos(4 * phi - tSmooth * 0.3);
+    const n2 = Math.sin(9 * theta + tSmooth) * Math.cos(9 * phi - tSmooth * 0.8);
+    const dr = n1 * 0.55 + n2 * 0.2;
+    const smoothI = audioIntensity * audioIntensity * (3 - 2 * audioIntensity); 
+    r = 1.0 + dr * Math.min(smoothI, 1.0) * 0.9;
+  } else if (style === 'wave') {
+    const dr = 0.45 * Math.sin(3.0 * theta - tSmooth * 2.5);
+    const smoothI = audioIntensity * audioIntensity * (3 - 2 * audioIntensity);
+    r = 1.0 + dr * Math.min(smoothI, 1.0);
+  } else if (style === 'ripple') {
+    const dr = 0.4 * Math.sin(7.0 * phi - tSmooth * 3.5);
+    const smoothI = audioIntensity * audioIntensity * (3 - 2 * audioIntensity);
+    r = 1.0 + dr * Math.min(smoothI, 1.0);
+  }
+  positions[idx]     = bx * r;
+  positions[idx + 1] = by * r;
+  positions[idx + 2] = bz * r;
+} else {
         const tectonic = Math.sin(6 * theta) * Math.cos(6 * phi);
         const r1 = 1.0 + (tectonic > 0.3 ? 0.15 : tectonic < -0.3 ? -0.1 : 0);
         const tx1 = bx * r1, ty1 = by * r1, tz1 = bz * r1;
