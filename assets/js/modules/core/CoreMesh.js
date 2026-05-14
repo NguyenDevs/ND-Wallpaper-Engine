@@ -126,17 +126,19 @@ class CoreMesh {
           const dr = (plate - 0.5) * 0.7 * audioIntensity;
           r = 1.0 + dr;
         } else if (style === 'wave') {
-          const floatIdx = ((theta + Math.PI) / (2 * Math.PI)) * 63;
-          const i1 = Math.floor(floatIdx);
+          const roll = tSmooth * 1.5;
+          const floatIdx = ((theta + Math.PI + roll) / (2 * Math.PI)) * 63;
+          const i1 = Math.floor(floatIdx) % 64;
           const i2 = (i1 + 1) % 64;
-          const f = floatIdx - i1;
+          const f = floatIdx - Math.floor(floatIdx);
           const freqValue = this._smoothAudio[i1] * (1 - f) + this._smoothAudio[i2] * f;
           
-          const mag = Math.pow(freqValue, 1.1) * 1.5;
-          const spike = mag * Math.sin(phi);
-          const ambient = 0.08 * Math.sin(4 * theta + tSmooth * 1.5);
-          const dr = (spike + ambient) * audioIntensity;
-          r = 1.0 + Math.tanh(dr * 1.6) * 0.5;
+          const wave1 = Math.sin(theta * 2 + roll) * Math.cos(phi * 2);
+          const wave2 = Math.sin(theta * 4 - roll * 0.5) * 0.5;
+          const mag = Math.pow(freqValue, 1.1) * 1.2;
+          const dr = (mag * (1.0 + wave1 * 0.3 + wave2 * 0.2)) * audioIntensity;
+          
+          r = 1.0 + Math.tanh(dr * 1.8) * 0.45;
         } else if (style === 'ripple') {
           const wave = Math.sin(phi * 8 - tSmooth * 5) * 0.5 + 0.5;
           const dr = wave * audioIntensity * 0.5;
