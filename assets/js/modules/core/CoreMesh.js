@@ -28,14 +28,14 @@ class CoreMesh {
 
   initMaterial() {
     this.wireMat = new THREE.MeshPhysicalMaterial({
-      color: 0xaa00ff, emissive: 0x4400aa, emissiveIntensity: 1.2,
-      wireframe: true, transparent: true, opacity: 0.28,
+      color: 0x8800ff, emissive: 0x220066, emissiveIntensity: 0.8,
+      wireframe: true, transparent: true, opacity: 0.25,
       blending: THREE.AdditiveBlending, depthWrite: false,
     });
 
     this.pointsMat = new THREE.PointsMaterial({
-      size: 0.08, color: 0xdd88ff, transparent: true, opacity: 0.8,
-      blending: THREE.AdditiveBlending, map: Utils.getGlowTex('rgba(200,100,255,1)', 16), depthWrite: false,
+      size: 0.08, color: 0xaa44ff, transparent: true, opacity: 0.75,
+      blending: THREE.AdditiveBlending, map: Utils.getGlowTex('rgba(255,255,255,1)', 16), depthWrite: false,
     });
 
     this.wireMat.onBeforeCompile = (shader) => {
