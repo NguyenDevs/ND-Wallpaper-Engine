@@ -8,7 +8,6 @@ class CoreSystem {
     this.RADIUS = 1.4;
     this.mesh = new CoreMesh(this.group, this.RADIUS);
     this.filaments = new FilamentSystem(this.group);
-    this.flares = new FlareSystem(this.group, this.RADIUS);
     this.aura = new AuraSystem(this.group);
 
     this.userData = { smoothM: 0, targetM: 0, nextPickTime: 0 };
@@ -31,7 +30,6 @@ class CoreSystem {
 
     this.mesh.update(t, this.userData.smoothM, coreIntro, musicEnable, musicStyle, audioIntensity, audioData);
     this.filaments.update(t, coreIntro);
-    this.flares.update(t, coreIntro);
     this.aura.update(t, coreIntro, audioIntensity, musicEnable, coreLight);
 
     const coreRotSpeed = 0.01 * (0.1 + 0.3 * coreIntro) * (0.5 + 0.5 * speedProp);
