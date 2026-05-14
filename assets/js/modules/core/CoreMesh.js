@@ -2,12 +2,13 @@ class CoreMesh {
   constructor(group, radius) {
     this.group = group;
     this.RADIUS = radius;
+    this._smoothAudio = new Float32Array(64).fill(0);
     this.initGeometry();
     this.initMaterial();
   }
 
   initGeometry() {
-    this.geo = new THREE.IcosahedronGeometry(this.RADIUS, 5);
+    this.geo = new THREE.IcosahedronGeometry(this.RADIUS, 6);
     this.basePos = new Float32Array(this.geo.attributes.position.array);
     const N = this.basePos.length / 3;
     this.thetaArr = new Float32Array(N);
@@ -27,13 +28,13 @@ class CoreMesh {
 
   initMaterial() {
     this.wireMat = new THREE.MeshPhysicalMaterial({
-      color: 0xaa00ff, emissive: 0x4400aa, emissiveIntensity: 1.0,
-      wireframe: true, transparent: true, opacity: 0.25,
+      color: 0xaa00ff, emissive: 0x4400aa, emissiveIntensity: 1.2,
+      wireframe: true, transparent: true, opacity: 0.28,
       blending: THREE.AdditiveBlending, depthWrite: false,
     });
 
     this.pointsMat = new THREE.PointsMaterial({
-      size: 0.12, color: 0xdd88ff, transparent: true, opacity: 0.9,
+      size: 0.1, color: 0xdd88ff, transparent: true, opacity: 0.85,
       blending: THREE.AdditiveBlending, map: Utils.getGlowTex('rgba(200,100,255,1)', 16), depthWrite: false,
     });
 
@@ -51,7 +52,7 @@ class CoreMesh {
       `.replace(
         `vec4 diffuseColor = vec4( diffuse, opacity );`,
         `
-        float depthFade = smoothstep(-0.2, 0.8, vNormalZ);
+        float depthFade = smoothstep(-0.3, 0.7, vNormalZ);
         vec4 diffuseColor = vec4( diffuse, opacity * depthFade );
         `
       );
@@ -85,7 +86,7 @@ class CoreMesh {
         `vec4 diffuseColor = vec4( diffuse, opacity );`,
         `float t = uTime * (2.0 + vRandom * 3.0) + vRandom * 100.0;
          float twinkle = 0.4 + 0.6 * pow(0.5 + 0.5 * sin(t), 2.0);
-         float depthFade = smoothstep(-0.2, 0.8, vNormalZ);
+         float depthFade = smoothstep(-0.3, 0.7, vNormalZ);
          vec4 diffuseColor = vec4( diffuse, opacity * twinkle * depthFade );`
       );
       this.pointsMat.userData.shader = shader;
@@ -99,10 +100,16 @@ class CoreMesh {
     this.group.add(this.points);
   }
 
-  update(t, morphCycle, coreIntro, musicEnable, musicStyle, audioIntensity) {
+  update(t, morphCycle, coreIntro, musicEnable, musicStyle, audioIntensity, audioData) {
     const positions = this.geo.attributes.position.array;
     const N = this.basePos.length / 3;
     const tSmooth = t * 0.6;
+
+    if (musicEnable && audioData) {
+      for (let j = 0; j < 64; j++) {
+        this._smoothAudio[j] += (audioData[j] - this._smoothAudio[j]) * 0.15;
+      }
+    }
 
     for (let i = 0; i < N; i++) {
       const idx = i * 3, bx = this.basePos[idx], by = this.basePos[idx + 1], bz = this.basePos[idx + 2];
@@ -113,16 +120,21 @@ class CoreMesh {
         const style = (musicStyle || 'tectonic').toLowerCase();
         
         if (style === 'tectonic') {
-          const n1 = Math.sin(4 * theta + tSmooth * 0.5) * Math.cos(4 * phi - tSmooth * 0.3);
-          const n2 = Math.sin(9 * theta + tSmooth) * Math.cos(9 * phi - tSmooth * 0.8);
-          const dr = n1 * 0.55 + n2 * 0.2;
-          r = 1.0 + dr * audioIntensity * 0.9;
+          const n1 = Math.sin(5 * theta + tSmooth) * Math.cos(5 * phi - tSmooth);
+          const n2 = Math.sin(10 * theta - tSmooth * 1.2) * Math.cos(10 * phi + tSmooth * 0.8);
+          const dr = (n1 * 0.5 + n2 * 0.3) * audioIntensity;
+          r = 1.0 + dr * 0.8;
         } else if (style === 'wave') {
-          const dr = 0.45 * Math.sin(3.0 * theta - tSmooth * 2.5);
-          r = 1.0 + dr * audioIntensity;
+          const binIdx = Math.floor(((theta + Math.PI) / (2 * Math.PI)) * 63.9);
+          const freqValue = this._smoothAudio[binIdx] || 0;
+          const mag = Math.pow(freqValue, 1.2) * 2.5;
+          const spike = mag * Math.sin(phi);
+          const ambient = 0.1 * Math.sin(5 * theta + tSmooth * 2);
+          r = 1.0 + (spike + ambient) * audioIntensity;
         } else if (style === 'ripple') {
-          const dr = 0.4 * Math.sin(7.0 * phi - tSmooth * 3.5);
-          r = 1.0 + dr * audioIntensity;
+          const wave = Math.sin(phi * 8 - tSmooth * 5) * 0.5 + 0.5;
+          const dr = wave * audioIntensity * 0.6;
+          r = 1.0 + dr;
         }
         positions[idx] = bx * r;
         positions[idx + 1] = by * r;

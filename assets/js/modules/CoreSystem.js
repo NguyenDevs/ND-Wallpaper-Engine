@@ -14,7 +14,7 @@ class CoreSystem {
     this.userData = { smoothM: 0, targetM: 0, nextPickTime: 0 };
   }
 
-  update(t, coreIntro, ringIntro, speedProp, audioIntensity, musicEnable, musicStyle, musicSensitive, coreLight) {
+  update(t, coreIntro, ringIntro, speedProp, audioIntensity, audioData, musicEnable, musicStyle, musicSensitive, coreLight) {
     if (!musicEnable) {
       if (!this.userData.nextPickTime || t > this.userData.nextPickTime) {
         const r = Math.random();
@@ -29,7 +29,7 @@ class CoreSystem {
       this.userData.smoothM = 0;
     }
 
-    this.mesh.update(t, this.userData.smoothM, coreIntro, musicEnable, musicStyle, audioIntensity);
+    this.mesh.update(t, this.userData.smoothM, coreIntro, musicEnable, musicStyle, audioIntensity, audioData);
     this.filaments.update(t, coreIntro);
     this.flares.update(t, coreIntro);
     this.aura.update(t, coreIntro, audioIntensity, musicEnable, coreLight);

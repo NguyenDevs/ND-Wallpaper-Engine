@@ -71,27 +71,30 @@ class WallpaperEngine {
       high /= 16;
 
       const sens = (cfg.musicSensitive ?? 50) / 50;
-      const raw = (bass * 0.65 + mid * 0.25 + high * 0.1) * sens;
+      let raw = (bass * 0.6 + mid * 0.3 + high * 0.1) * sens;
+
+      raw = Math.pow(raw, 0.85);
 
       if (raw > this._envPeak) {
-        this._envPeak += (raw - this._envPeak) * 0.8;
+        this._envPeak += (raw - this._envPeak) * 0.85;
       } else {
-        this._envPeak += (raw - this._envPeak) * 0.12;
+        this._envPeak += (raw - this._envPeak) * 0.1;
       }
 
-      this._envAvg += (raw - this._envAvg) * 0.015;
+      this._envAvg += (raw - this._envAvg) * 0.01;
 
       const delta = Math.max(0, this._envPeak - this._envAvg);
-      const scaled = Math.tanh(delta * sens * 6.5) * 1.25;
+      const boost = 1.0 + (1.0 - Math.min(1.0, delta * 2.0)) * 0.5;
+      const scaled = delta * sens * 4.0 * boost;
 
-      const attack = 0.6, decay = 0.08;
+      const attack = 0.7, decay = 0.1;
       if (scaled > this._envRelative) {
         this._envRelative += (scaled - this._envRelative) * attack;
       } else {
         this._envRelative += (scaled - this._envRelative) * decay;
       }
 
-      this.smoothAudioIntensity = this._envRelative;
+      this.smoothAudioIntensity = Math.min(1.5, this._envRelative);
     } else {
       this._envPeak *= 0.85;
       this._envAvg *= 0.95;
@@ -121,8 +124,9 @@ class WallpaperEngine {
     const coreIntro = Utils.smoothstep(Math.max(0, (this.introProgress - 0.7) / 0.3));
     const speedBoost = 1.0 + Math.pow(1.0 - ringIntro, 2) * 15.0;
     const audioIntensity = this.updateAudioIntensity(cfg);
+    const audioData = window._wallpaperAudioData;
 
-    this.core.update(this.t, coreIntro, ringIntro, speedProp, audioIntensity, cfg.musicEnable, cfg.musicStyle, cfg.musicSensitive, this.sceneManager.coreLight);
+    this.core.update(this.t, coreIntro, ringIntro, speedProp, audioIntensity, audioData, cfg.musicEnable, cfg.musicStyle, cfg.musicSensitive, this.sceneManager.coreLight);
     this.rings.update(ringIntro, speedBoost, speedProp);
     this.debris.update(this.t, speedProp);
     this.particles.update(this.t, speedProp, audioIntensity, cfg.musicEnable);
