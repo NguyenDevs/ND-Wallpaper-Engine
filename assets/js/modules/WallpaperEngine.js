@@ -1,12 +1,12 @@
 class WallpaperEngine {
   constructor() {
-  this.t = 0;
-  this.introProgress = 0;
-  this.smoothAudioIntensity = 0;
-  this._envPeak    = 0; 
-  this._envAvg     = 0;  
-  this._envRelative = 0; 
-}
+    this.t = 0;
+    this.introProgress = 0;
+    this.smoothAudioIntensity = 0;
+    this._envPeak = 0; 
+    this._envAvg = 0;  
+    this._envRelative = 0; 
+  }
 
   init() {
     const cfg = window.wallpaperConfig || {};
@@ -56,56 +56,50 @@ class WallpaperEngine {
   }
 
   updateAudioIntensity(cfg) {
-  const audio = window._wallpaperAudioData;
-  if (cfg.musicEnable && audio && audio.length > 0) {
-    let bass = 0;
-    for (let j = 0; j < 12; j++) bass += audio[j];
-    bass /= 12;
+    const audio = window._wallpaperAudioData;
+    if (cfg.musicEnable && audio && audio.length > 0) {
+      let bass = 0;
+      for (let j = 0; j < 12; j++) bass += audio[j];
+      bass /= 12;
 
-    let mid = 0;
-    for (let j = 12; j < 48; j++) mid += audio[j];
-    mid /= 36;
+      let mid = 0;
+      for (let j = 12; j < 48; j++) mid += audio[j];
+      mid /= 36;
 
-    let high = 0;
-    for (let j = 48; j < 64; j++) high += audio[j];
-    high /= 16;
+      let high = 0;
+      for (let j = 48; j < 64; j++) high += audio[j];
+      high /= 16;
 
-    const sens = (cfg.musicSensitive ?? 50) / 50;
-    const raw = (bass * 0.65 + mid * 0.25 + high * 0.1) * sens;
+      const sens = (cfg.musicSensitive ?? 50) / 50;
+      const raw = (bass * 0.65 + mid * 0.25 + high * 0.1) * sens;
 
-    // Peak envelope: bắt nhanh, thả chậm
-    if (raw > this._envPeak) {
-      this._envPeak += (raw - this._envPeak) * 0.5;   // attack nhanh
+      if (raw > this._envPeak) {
+        this._envPeak += (raw - this._envPeak) * 0.8;
+      } else {
+        this._envPeak += (raw - this._envPeak) * 0.12;
+      }
+
+      this._envAvg += (raw - this._envAvg) * 0.015;
+
+      const delta = Math.max(0, this._envPeak - this._envAvg);
+      const scaled = Math.tanh(delta * sens * 6.5) * 1.25;
+
+      const attack = 0.6, decay = 0.08;
+      if (scaled > this._envRelative) {
+        this._envRelative += (scaled - this._envRelative) * attack;
+      } else {
+        this._envRelative += (scaled - this._envRelative) * decay;
+      }
+
+      this.smoothAudioIntensity = this._envRelative;
     } else {
-      this._envPeak += (raw - this._envPeak) * 0.08;  // decay chậm
+      this._envPeak *= 0.85;
+      this._envAvg *= 0.95;
+      this._envRelative *= 0.88;
+      this.smoothAudioIntensity = this._envRelative;
     }
-
-    // Average envelope: theo dõi nền dài hạn (chậm hơn nhiều)
-    this._envAvg += (raw - this._envAvg) * 0.015;
-
-    // Delta = khoảng cách peak so với nền — luôn có giá trị ngay cả khi nhạc dồn dập
-    const delta = Math.max(0, this._envPeak - this._envAvg);
-
-    // Scale delta, tanh để soft-clamp
-    const scaled = Math.tanh(delta * sens * 6.0) * 1.2;
-
-    // Smooth output cuối
-    const attack = 0.25, decay = 0.07;
-    if (scaled > this._envRelative) {
-      this._envRelative += (scaled - this._envRelative) * attack;
-    } else {
-      this._envRelative += (scaled - this._envRelative) * decay;
-    }
-
-    this.smoothAudioIntensity = this._envRelative;
-  } else {
-    this._envPeak    *= 0.90;
-    this._envAvg     *= 0.98;
-    this._envRelative *= 0.92;
-    this.smoothAudioIntensity = this._envRelative;
+    return this.smoothAudioIntensity;
   }
-  return this.smoothAudioIntensity;
-}
 
   animate() {
     window._threejsRafId = requestAnimationFrame(() => this.animate());
