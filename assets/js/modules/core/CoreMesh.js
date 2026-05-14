@@ -120,24 +120,15 @@ class CoreMesh {
         const style = (musicStyle || 'tectonic').toLowerCase();
         
         if (style === 'tectonic') {
-          const n1 = Math.sin(3 * theta + tSmooth * 0.5) * Math.cos(3 * phi - tSmooth * 0.4);
-          const n2 = Math.sin(6 * theta - tSmooth) * Math.cos(6 * phi + tSmooth * 0.5);
-          const plate = Utils.smoothstep(0.4 + (n1 * 0.7 + n2 * 0.3) * 0.6);
-          const dr = (plate - 0.5) * 0.7 * audioIntensity;
+          const pattern = Math.sin(6 * theta) * Math.cos(6 * phi);
+          const block = pattern > 0.33 ? 0.2 : pattern < -0.33 ? -0.15 : 0;
+          const dr = block * audioIntensity * 1.2;
           r = 1.0 + dr;
         } else if (style === 'wave') {
-          const flow = tSmooth * 2.5;
-          const floatIdx = ((theta + Math.PI) / (2 * Math.PI)) * 63;
-          const i1 = Math.floor(floatIdx);
-          const i2 = (i1 + 1) % 64;
-          const f = floatIdx - i1;
-          const freqValue = this._smoothAudio[i1] * (1 - f) + this._smoothAudio[i2] * f;
-          
-          const undulation = Math.sin(theta * 3 + phi * 2 - flow);
-          const noise = Math.sin(theta * 6 - phi * 4 + flow * 0.5) * 0.3;
-          const mag = 0.2 + freqValue * 1.5;
-          const dr = (undulation + noise) * mag * audioIntensity * 0.6;
-          
+          const n1 = Math.sin(4 * theta + tSmooth * 0.5) * Math.cos(4 * phi - tSmooth * 0.4);
+          const n2 = Math.sin(8 * theta - tSmooth) * Math.cos(8 * phi + tSmooth * 0.5);
+          const plate = Utils.smoothstep(0.5 + (n1 * 0.7 + n2 * 0.3) * 0.5);
+          const dr = (plate - 0.5) * 0.8 * audioIntensity;
           r = 1.0 + dr;
         } else if (style === 'ripple') {
           const wave = Math.sin(phi * 8 - tSmooth * 5) * 0.5 + 0.5;
