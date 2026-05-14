@@ -65,14 +65,18 @@ class ParticleSystem {
       `.replace(
         `vec4 diffuseColor = vec4( diffuse, opacity );`,
         `
-        float finalOpacity = opacity;
+        float proximity = smoothstep(24.0, 2.0, vDist);
+        float baseOpacity = 0.15 + proximity * 0.12;
+        float finalOpacity = baseOpacity;
+
         if (uMusicEnable > 0.5) {
           float distOffset = vDist * 0.015;
           float pulse = smoothstep(vRandom * 0.3 + distOffset, vRandom * 0.3 + 0.6 + distOffset, uAudioIntensity);
-          float sparkle = pow(0.5 + 0.5 * sin(uTime * (4.0 + vRandom * 8.0) + vDist * 0.5), 4.0);
-          finalOpacity = 0.04 + pulse * 1.2 + sparkle * uAudioIntensity * 0.5;
+          float sparkle = pow(0.5 + 0.5 * sin(uTime * (3.0 + vRandom * 5.0) + vDist * 0.3), 2.0) * 0.4;
+          finalOpacity = baseOpacity + pulse * 1.1 + sparkle * (1.0 + uAudioIntensity);
         } else {
-          finalOpacity = 0.25 + 0.15 * sin(uTime * 1.5 + vRandom * 50.0 + vDist * 0.2);
+          float idleTwinkle = pow(0.5 + 0.5 * sin(uTime * 1.2 + vRandom * 20.0 + vDist * 0.1), 2.0) * 0.2;
+          finalOpacity = baseOpacity + idleTwinkle;
         }
         vec4 diffuseColor = vec4( diffuse, finalOpacity );
         `
