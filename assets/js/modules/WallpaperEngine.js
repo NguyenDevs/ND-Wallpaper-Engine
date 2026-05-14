@@ -1,9 +1,12 @@
 class WallpaperEngine {
   constructor() {
-    this.t = 0;
-    this.introProgress = 0;
-    this.smoothAudioIntensity = 0;
-  }
+  this.t = 0;
+  this.introProgress = 0;
+  this.smoothAudioIntensity = 0;
+  this._envPeak    = 0; 
+  this._envAvg     = 0;  
+  this._envRelative = 0; 
+}
 
   init() {
     const cfg = window.wallpaperConfig || {};
@@ -55,37 +58,51 @@ class WallpaperEngine {
   updateAudioIntensity(cfg) {
   const audio = window._wallpaperAudioData;
   if (cfg.musicEnable && audio && audio.length > 0) {
-    // Bass: bins 0-11
     let bass = 0;
     for (let j = 0; j < 12; j++) bass += audio[j];
     bass /= 12;
 
-    // Mid: bins 12-47
     let mid = 0;
     for (let j = 12; j < 48; j++) mid += audio[j];
     mid /= 36;
 
-    // High: bins 48-63
     let high = 0;
     for (let j = 48; j < 64; j++) high += audio[j];
     high /= 16;
 
-    const sens = (cfg.musicSensitive ?? 50) / 50; 
-    const raw = (bass * 0.6 + mid * 0.3 + high * 0.1) * sens * 4.5;
+    const sens = (cfg.musicSensitive ?? 50) / 50;
+    const raw = (bass * 0.65 + mid * 0.25 + high * 0.1) * sens;
 
-    // Soft-clamp
-    const clamped = Math.tanh(raw * 0.8) * 1.35;
-
-    // Asymmetric smoothing
-    const attack = 0.18;   
-    const decay  = 0.06; 
-    if (clamped > this.smoothAudioIntensity) {
-      this.smoothAudioIntensity += (clamped - this.smoothAudioIntensity) * attack;
+    // Peak envelope: bắt nhanh, thả chậm
+    if (raw > this._envPeak) {
+      this._envPeak += (raw - this._envPeak) * 0.5;   // attack nhanh
     } else {
-      this.smoothAudioIntensity += (clamped - this.smoothAudioIntensity) * decay;
+      this._envPeak += (raw - this._envPeak) * 0.08;  // decay chậm
     }
+
+    // Average envelope: theo dõi nền dài hạn (chậm hơn nhiều)
+    this._envAvg += (raw - this._envAvg) * 0.015;
+
+    // Delta = khoảng cách peak so với nền — luôn có giá trị ngay cả khi nhạc dồn dập
+    const delta = Math.max(0, this._envPeak - this._envAvg);
+
+    // Scale delta, tanh để soft-clamp
+    const scaled = Math.tanh(delta * sens * 6.0) * 1.2;
+
+    // Smooth output cuối
+    const attack = 0.25, decay = 0.07;
+    if (scaled > this._envRelative) {
+      this._envRelative += (scaled - this._envRelative) * attack;
+    } else {
+      this._envRelative += (scaled - this._envRelative) * decay;
+    }
+
+    this.smoothAudioIntensity = this._envRelative;
   } else {
-    this.smoothAudioIntensity *= 0.94; 
+    this._envPeak    *= 0.90;
+    this._envAvg     *= 0.98;
+    this._envRelative *= 0.92;
+    this.smoothAudioIntensity = this._envRelative;
   }
   return this.smoothAudioIntensity;
 }
