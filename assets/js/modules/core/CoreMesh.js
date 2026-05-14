@@ -8,7 +8,7 @@ class CoreMesh {
   }
 
   initGeometry() {
-    this.geo = new THREE.IcosahedronGeometry(this.RADIUS, 6);
+    this.geo = new THREE.IcosahedronGeometry(this.RADIUS, 7);
     this.basePos = new Float32Array(this.geo.attributes.position.array);
     const N = this.basePos.length / 3;
     this.thetaArr = new Float32Array(N);
@@ -34,7 +34,7 @@ class CoreMesh {
     });
 
     this.pointsMat = new THREE.PointsMaterial({
-      size: 0.1, color: 0xdd88ff, transparent: true, opacity: 0.85,
+      size: 0.08, color: 0xdd88ff, transparent: true, opacity: 0.8,
       blending: THREE.AdditiveBlending, map: Utils.getGlowTex('rgba(200,100,255,1)', 16), depthWrite: false,
     });
 
@@ -52,7 +52,7 @@ class CoreMesh {
       `.replace(
         `vec4 diffuseColor = vec4( diffuse, opacity );`,
         `
-        float depthFade = smoothstep(-0.3, 0.7, vNormalZ);
+        float depthFade = smoothstep(-0.4, 0.6, vNormalZ);
         vec4 diffuseColor = vec4( diffuse, opacity * depthFade );
         `
       );
@@ -86,7 +86,7 @@ class CoreMesh {
         `vec4 diffuseColor = vec4( diffuse, opacity );`,
         `float t = uTime * (2.0 + vRandom * 3.0) + vRandom * 100.0;
          float twinkle = 0.4 + 0.6 * pow(0.5 + 0.5 * sin(t), 2.0);
-         float depthFade = smoothstep(-0.3, 0.7, vNormalZ);
+         float depthFade = smoothstep(-0.4, 0.6, vNormalZ);
          vec4 diffuseColor = vec4( diffuse, opacity * twinkle * depthFade );`
       );
       this.pointsMat.userData.shader = shader;
@@ -126,13 +126,17 @@ class CoreMesh {
           const dr = (plate - 0.5) * 0.7 * audioIntensity;
           r = 1.0 + dr;
         } else if (style === 'wave') {
-          const binIdx = Math.floor(((theta + Math.PI) / (2 * Math.PI)) * 63.9);
-          const freqValue = this._smoothAudio[binIdx] || 0;
-          const mag = Math.pow(freqValue, 1.1) * 1.4;
+          const floatIdx = ((theta + Math.PI) / (2 * Math.PI)) * 63;
+          const i1 = Math.floor(floatIdx);
+          const i2 = (i1 + 1) % 64;
+          const f = floatIdx - i1;
+          const freqValue = this._smoothAudio[i1] * (1 - f) + this._smoothAudio[i2] * f;
+          
+          const mag = Math.pow(freqValue, 1.1) * 1.5;
           const spike = mag * Math.sin(phi);
           const ambient = 0.08 * Math.sin(4 * theta + tSmooth * 1.5);
           const dr = (spike + ambient) * audioIntensity;
-          r = 1.0 + Math.tanh(dr * 1.5) * 0.5;
+          r = 1.0 + Math.tanh(dr * 1.6) * 0.5;
         } else if (style === 'ripple') {
           const wave = Math.sin(phi * 8 - tSmooth * 5) * 0.5 + 0.5;
           const dr = wave * audioIntensity * 0.5;
