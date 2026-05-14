@@ -36,7 +36,7 @@ class AuraSystem {
     if (musicEnable) {
       coreLight.intensity = (0.5 + audioIntensity * 3) * coreIntro * ptIntensity;
       this.glowOrb.scale.setScalar((6.0 + audioIntensity * 2) * (0.2 + 0.8 * coreIntro) * glowSize);
-      targetBH = Math.max(0.35, 1.0 - audioIntensity * 1.1);
+      targetBH = Math.max(0.5, 1.0 - audioIntensity * 1.1);
     } else {
       coreLight.intensity = (0.8 + Math.sin(t * 2) * 0.4) * coreIntro * ptIntensity;
       this.glowOrb.scale.setScalar((6.5 + Math.sin(t * 3) * 0.8) * (0.2 + 0.8 * coreIntro) * glowSize);
@@ -45,7 +45,8 @@ class AuraSystem {
       this.bhGlow.material.opacity = 0.9 * glowIntensity;
     }
 
-    this._smoothBH += (targetBH - this._smoothBH) * 0.18;
+    const lerpFactor = targetBH < this._smoothBH ? 0.35 : 0.15;
+    this._smoothBH += (targetBH - this._smoothBH) * lerpFactor;
     this.blackHole.scale.setScalar(this._smoothBH);
   }
 }
