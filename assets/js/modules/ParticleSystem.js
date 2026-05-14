@@ -12,16 +12,24 @@ class ParticleSystem {
     const pGeo = new THREE.BufferGeometry();
     const pPos = new Float32Array(amount * 3);
     const randoms = new Float32Array(amount);
+    const distances = new Float32Array(amount);
+
     for (let i = 0; i < amount; i++) {
-      const r = 2.0 + Math.pow(Math.random(), 1.5) * 20.0;
-      const theta = Math.random() * Math.PI * 2, phi = Math.acos(2 * Math.random() - 1);
+      const r = 2.0 + Math.pow(Math.random(), 1.5) * 22.0;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      
       pPos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
       pPos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
       pPos[i * 3 + 2] = r * Math.cos(phi);
+      
       randoms[i] = Math.random();
+      distances[i] = r;
     }
+
     pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
     pGeo.setAttribute('aRandom', new THREE.BufferAttribute(randoms, 1));
+    pGeo.setAttribute('aDist', new THREE.BufferAttribute(distances, 1));
 
     const pMat = new THREE.PointsMaterial({
       size: size, map: Utils.getGlowTex('rgba(190,100,255,1)', 16),
@@ -33,16 +41,23 @@ class ParticleSystem {
       shader.uniforms.uAudioIntensity = { value: 0 };
       shader.uniforms.uMusicEnable = { value: 0 };
       shader.uniforms.uTime = { value: 0 };
+      
       shader.vertexShader = `
         attribute float aRandom;
+        attribute float aDist;
         varying float vRandom;
+        varying float vDist;
         ${shader.vertexShader}
       `.replace(
         `void main() {`,
-        `void main() { vRandom = aRandom;`
+        `void main() { 
+          vRandom = aRandom; 
+          vDist = aDist;`
       );
+
       shader.fragmentShader = `
         varying float vRandom;
+        varying float vDist;
         uniform float uAudioIntensity;
         uniform float uMusicEnable;
         uniform float uTime;
@@ -52,11 +67,12 @@ class ParticleSystem {
         `
         float finalOpacity = opacity;
         if (uMusicEnable > 0.5) {
-          float pulse = smoothstep(vRandom * 0.4, vRandom * 0.4 + 0.5, uAudioIntensity);
-          float sparkle = pow(0.5 + 0.5 * sin(uTime * (5.0 + vRandom * 10.0) + vRandom * 100.0), 3.0);
-          finalOpacity = 0.05 + pulse * 1.1 + sparkle * uAudioIntensity * 0.4;
+          float distOffset = vDist * 0.015;
+          float pulse = smoothstep(vRandom * 0.3 + distOffset, vRandom * 0.3 + 0.6 + distOffset, uAudioIntensity);
+          float sparkle = pow(0.5 + 0.5 * sin(uTime * (4.0 + vRandom * 8.0) + vDist * 0.5), 4.0);
+          finalOpacity = 0.04 + pulse * 1.2 + sparkle * uAudioIntensity * 0.5;
         } else {
-          finalOpacity = 0.3 + 0.2 * sin(uTime * 2.0 + vRandom * 100.0);
+          finalOpacity = 0.25 + 0.15 * sin(uTime * 1.5 + vRandom * 50.0 + vDist * 0.2);
         }
         vec4 diffuseColor = vec4( diffuse, finalOpacity );
         `
@@ -69,8 +85,8 @@ class ParticleSystem {
   }
 
   update(t, speedProp, audioIntensity, musicEnable) {
-    this.pSystem.rotation.y = t * 0.05 * speedProp;
-    this.pSystem.rotation.z = Math.sin(t * 0.1) * 0.1;
+    this.pSystem.rotation.y = t * 0.04 * speedProp;
+    this.pSystem.rotation.z = Math.sin(t * 0.08) * 0.08;
     
     if (this.pSystem.material.userData.shader) {
       const s = this.pSystem.material.userData.shader;
