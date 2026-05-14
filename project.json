@@ -71,7 +71,7 @@
 				"min": 0,
 				"max": 4,
 				"step": 0.05,
-				"value": 1
+				"value": 0.5
 			},
 			"corezoom": {
 				"group": "group_core",
@@ -181,7 +181,7 @@
 				"min": 0.1,
 				"max": 3,
 				"step": 0.1,
-				"value": 0.75
+				"value": 0.65
 			},
 			"glowintensity": {
 				"group": "group_core",
@@ -192,7 +192,7 @@
 				"min": 0,
 				"max": 5,
 				"step": 0.1,
-				"value": 0.65
+				"value": 0.75
 			},
 
 			"group_background": {
