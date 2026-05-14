@@ -79,12 +79,12 @@ class AuraSystem {
     let targetBH = 1.0;
     if (musicEnable) {
       coreLight.intensity = (0.5 + audioIntensity * 3) * coreIntro * ptIntensity;
-      this.glowOrb.scale.setScalar((8.0 + audioIntensity * 4.0) * (0.2 + 0.8 * coreIntro) * glowSize);
-      this.bhGlow.scale.setScalar((0.65 + audioIntensity * 0.35) * (0.5 + 0.5 * coreIntro) * glowSize);
+      this.glowOrb.scale.setScalar((1.8 + audioIntensity * 1.2) * (0.2 + 0.8 * coreIntro) * glowSize);
+      this.bhGlow.scale.setScalar((0.55 + audioIntensity * 0.45) * (0.5 + 0.5 * coreIntro) * glowSize);
       targetBH = Math.max(0.5, 1.0 - audioIntensity * 1.1);
     } else {
       coreLight.intensity = (0.8 + Math.sin(t * 2) * 0.4) * coreIntro * ptIntensity;
-      this.glowOrb.scale.setScalar((9.0 + Math.sin(t * 3) * 1.0) * (0.2 + 0.8 * coreIntro) * glowSize);
+      this.glowOrb.scale.setScalar((2.2 + Math.sin(t * 3) * 0.3) * (0.2 + 0.8 * coreIntro) * glowSize);
       this.bhGlow.scale.setScalar(0.75 * glowSize);
       targetBH = 1.0 + Math.sin(t * 1.5) * 0.05;
     }
