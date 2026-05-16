@@ -29,8 +29,6 @@ class RingSystem {
       const r1 = currentR2 + ringGap;
       const r2 = r1 + c.w;
       currentR2 = r2;
-
-      // Adjust fragment gap to "fit" the space (longer fragments when spacing is larger)
       const fragmentGap = 0.3 / Math.sqrt(spacing);
 
       const r = this.createFragmentedRing(r1, r2, c.d, 3 + (i % 4), c.s, c.a, this.getSkipIndices(3 + (i % 4), c.skip), fragmentGap);
