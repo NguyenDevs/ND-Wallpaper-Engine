@@ -498,7 +498,7 @@
 					{ "label": "Wave", "value": "wave" },
 					{ "label": "Ripple", "value": "ripple" }
 				],
-				"value": "tectonic"
+				"value": "wave"
 			}
 
 		}
