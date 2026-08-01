@@ -16,6 +16,10 @@ class CoreSystem {
     this.userData = { smoothM: 0, targetM: 0, nextPickTime: 0 };
   }
 
+  setDetail(detail) {
+    this.mesh.setDetail(detail);
+  }
+
   update(t, coreIntro, ringIntro, speedProp, audioIntensity, audioData, musicEnable, musicStyle, musicSensitive, coreLight) {
     if (!musicEnable) {
       if (!this.userData.nextPickTime || t > this.userData.nextPickTime) {
