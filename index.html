@@ -158,6 +158,8 @@
       clockMode: 0,
       clockEnable: true,
       ringSpacing: 1.0,
+      corePolygon: false,
+      coreDetail: 7,
       endskyHoleSize: 80,
       endskyZoom: 1.0,
       endskyIterations: 16,
@@ -300,6 +302,8 @@
         if (properties.debrissize) { window.wallpaperConfig.debrisSize = properties.debrissize.value; window.dispatchEvent(new CustomEvent('threejs-update', {detail: {type:'debrissize'}})); }
         if (properties.glowsize) window.wallpaperConfig.glowSize = properties.glowsize.value;
         if (properties.glowintensity) window.wallpaperConfig.glowIntensity = properties.glowintensity.value;
+        if (properties.corepolygon) window.wallpaperConfig.corePolygon = properties.corepolygon.value;
+        if (properties.coredetail) { window.wallpaperConfig.coreDetail = properties.coredetail.value; window.dispatchEvent(new CustomEvent('threejs-update', {detail: {type:'coredetail'}})); }
         
         if (properties.endsky_hole_size) window.wallpaperConfig.endskyHoleSize = properties.endsky_hole_size.value;
         if (properties.endsky_zoom) window.wallpaperConfig.endskyZoom = properties.endsky_zoom.value;
