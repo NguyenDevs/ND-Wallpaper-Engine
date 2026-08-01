@@ -46,6 +46,7 @@ class WallpaperEngine {
     this.sceneManager.camera.position.set(this.sceneManager.camera.position.x, camCfg.offsetY ?? 2, camCfg.zoom ?? 18);
 
     window.addEventListener('threejs-update', (e) => {
+      if (e.detail.type === 'coredetail') this.core.setDetail(window.wallpaperConfig.coreDetail);
       if (e.detail.type === 'rings') this.rings.setupRings();
       if (e.detail.type === 'particles') this.particles.setupParticles();
       if (e.detail.type === 'particlesize') {
