@@ -194,6 +194,25 @@
 				"step": 0.1,
 				"value": 0.75
 			},
+			"corepolygon": {
+				"group": "group_core",
+				"index": 116,
+				"order": 116,
+				"text": "Polygon Mesh",
+				"type": "bool",
+				"value": false
+			},
+			"coredetail": {
+				"group": "group_core",
+				"index": 117,
+				"order": 117,
+				"text": "Core Point Density",
+				"type": "slider",
+				"min": 1,
+				"max": 16,
+				"step": 1,
+				"value": 7
+			},
 
 			"group_background": {
 				"index": 200,
