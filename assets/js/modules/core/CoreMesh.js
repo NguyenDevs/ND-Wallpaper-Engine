@@ -3,12 +3,24 @@ class CoreMesh {
     this.group = group;
     this.RADIUS = radius;
     this._smoothAudio = new Float32Array(64).fill(0);
+    this.detail = ((window.wallpaperConfig || {}).coreDetail) ?? 7;
     this.initGeometry();
     this.initMaterial();
   }
 
+  setDetail(detail) {
+    const d = Math.max(1, Math.round(detail ?? 7));
+    if (d === this.detail) return;
+    this.detail = d;
+    const oldGeo = this.geo;
+    this.initGeometry();
+    this.points.geometry = this.geo;
+    this.wireMesh.geometry = this.geo;
+    oldGeo.dispose();
+  }
+
   initGeometry() {
-    this.geo = new THREE.IcosahedronGeometry(this.RADIUS, 7);
+    this.geo = new THREE.IcosahedronGeometry(this.RADIUS, Math.max(1, Math.round(this.detail || 7)));
     this.basePos = new Float32Array(this.geo.attributes.position.array);
     const N = this.basePos.length / 3;
     this.thetaArr = new Float32Array(N);
@@ -101,6 +113,8 @@ class CoreMesh {
   }
 
   update(t, morphCycle, coreIntro, musicEnable, musicStyle, audioIntensity, audioData) {
+    const cfg = window.wallpaperConfig || {};
+    this.wireMesh.visible = cfg.corePolygon === true;
     const positions = this.geo.attributes.position.array;
     const N = this.basePos.length / 3;
     const tSmooth = t * 0.6;
