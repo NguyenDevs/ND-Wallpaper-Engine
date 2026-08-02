@@ -5,6 +5,7 @@ class CoreMesh {
     this._smoothAudio = new Float32Array(64).fill(0);
     this._avg = 0;
     this._waveEnv = 0;
+    this._rippleEnv = 0;
     this.detail = ((window.wallpaperConfig || {}).coreDetail) ?? 7;
     this.initGeometry();
     this.initMaterial();
@@ -137,6 +138,8 @@ class CoreMesh {
 
     const wt = Math.min(1.6, this.freqAt(0.03) * 0.5 + this.freqAt(0.4) * 0.4 + this.freqAt(0.75) * 0.25);
     this._waveEnv += (wt - this._waveEnv) * (wt > this._waveEnv ? 0.5 : 0.06);
+    const rt = Math.min(1.5, this.freqAt(0.04) * 0.7 + this.freqAt(0.6) * 0.3);
+    this._rippleEnv += (rt - this._rippleEnv) * (rt > this._rippleEnv ? 0.35 : 0.05);
 
     for (let i = 0; i < N; i++) {
       const idx = i * 3;
@@ -209,13 +212,15 @@ class CoreMesh {
   sampleRipple(x, y, z, t) {
     const bass = this.freqAt(0.04);
     const high = this.freqAt(0.6);
+    const swell = this._rippleEnv;
+    const amp = 0.1 + swell * 0.6;
 
-    const wave = Math.sin(this.e2(y, z) * 6 - t * (2.0 + bass * 0.8))
-               + Math.sin(this.a2(x, y) * 4 - t * (1.5 + bass * 0.6));
-    const ripple = Utils.smoothstep(0.5 + 0.5 * wave * 0.6);
+    const flowT = t * 1.1;
+    const wave = Math.sin(this.e2(y, z) * 6 - flowT)
+               + Math.sin(this.a2(x, y) * 4 - flowT * 0.8);
+    const ripple = Utils.smoothstep(0.5 + 0.5 * wave * 0.5);
     const weight = 0.5 + 0.5 * this.sin2(x, y, z, 2);
-    const amp = 0.5 + bass * 0.9 + high * 0.6;
-    return (ripple * weight - 0.25) * amp * 0.3;
+    return (ripple * weight - 0.25) * amp * (0.6 + high * 0.4);
   }
 
 sampleWave(x, y, z, t) {
