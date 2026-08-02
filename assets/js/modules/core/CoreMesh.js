@@ -25,14 +25,18 @@ class CoreMesh {
     const N = this.basePos.length / 3;
     this.thetaArr = new Float32Array(N);
     this.phiArr = new Float32Array(N);
+    this.normalBase = new Float32Array(3 * N);
     const randoms = new Float32Array(N);
 
     for (let i = 0; i < N; i++) {
       const x = this.basePos[i * 3] / this.RADIUS;
       const y = this.basePos[i * 3 + 1] / this.RADIUS;
       const z = this.basePos[i * 3 + 2] / this.RADIUS;
-      this.thetaArr[i] = Math.atan2(y, x);
-      this.phiArr[i] = Math.acos(Math.max(-1, Math.min(1, z)));
+      this.thetaArr[i] = Math.atan2(z, x);
+      this.phiArr[i] = Math.acos(Math.max(-1, Math.min(1, y)));
+      this.normBase[i * 3] = x;
+      this.normBase[i * 3 + 1] = y;
+      this.normBase[i * 3 + 2] = z;
       randoms[i] = Math.random();
     }
     this.geo.setAttribute('aRandom', new THREE.BufferAttribute(randoms, 1));
@@ -117,7 +121,6 @@ class CoreMesh {
     this.wireMesh.visible = cfg.corePolygon === true;
     const positions = this.geo.attributes.position.array;
     const N = this.basePos.length / 3;
-    const tSmooth = t * 0.6;
 
     if (musicEnable && audioData) {
       for (let j = 0; j < 64; j++) {
@@ -127,33 +130,27 @@ class CoreMesh {
     }
 
     for (let i = 0; i < N; i++) {
-      const idx = i * 3, bx = this.basePos[idx], by = this.basePos[idx + 1], bz = this.basePos[idx + 2];
-      const theta = this.thetaArr[i], phi = this.phiArr[i];
+      const idx = i * 3;
+      const bx = this.basePos[idx], by = this.basePos[idx + 1], bz = this.basePos[idx + 2];
+      const nx = this.normBase[idx], ny = this.normBase[idx + 1], nz = this.normBase[idx + 2];
 
       if (musicEnable) {
-        let r = 1.0;
+        let dr = 0;
         const styleL = (musicStyle || 'tectonic').toLowerCase();
+        if (styleL === 'tectonic') dr = this.sampleFreq(nx, ny, nz, t, 1.6);
+        else if (styleL === 'wave') dr = this.sampleWave(nx, ny, nz, t);
+        else if (styleL === 'ripple') dr = this.sampleRipple(nx, ny, nz, t);
 
-        if (styleL === 'tectonic') {
-          const dr = this.sampleFreq(theta / (Math.PI * 2), phi / Math.PI, t, 4, 1.6);
-          r = 1.0 + dr;
-        } else if (styleL === 'wave') {
-          const dr = this.sampleWave(theta, phi, tSmooth);
-          r = 1.0 + dr;
-        } else if (styleL === 'ripple') {
-          const dr = this.sampleRipple(theta, phi, tSmooth);
-          r = 1.0 + dr;
-        }
-        positions[idx] = bx * r;
-        positions[idx + 1] = by * r;
-        positions[idx + 2] = bz * r;
+        positions[idx] = bx + nx * dr;
+        positions[idx + 1] = by + ny * dr;
+        positions[idx + 2] = bz + nz * dr;
       } else {
-        const tectonic = Math.sin(6 * theta) * Math.cos(6 * phi);
+        const tectonic = this.sin2(nx, ny, nz, 3) * this.cos2(nx, ny, nz, 3);
         const r1 = 1.0 + (tectonic > 0.3 ? 0.15 : tectonic < -0.3 ? -0.1 : 0);
         const tx1 = bx * r1, ty1 = by * r1, tz1 = bz * r1;
-        const r2 = 1.0 + 0.25 * Math.sin(3 * theta - t * 1.5) + 0.2 * Math.cos(4 * phi + t);
+        const r2 = 1.0 + 0.25 * Math.sin(3 * this.a2(nx, ny) - t * 1.5) + 0.2 * Math.cos(4 * this.e2(ny, nz) + t);
         const tx2 = bx * r2, ty2 = by * r2, tz2 = bz * r2;
-        const r3 = 1.0 + 0.12 * Math.sin(8 * theta + t * 2) * Math.cos(t * 1.2) + 0.05 * Math.sin(phi * 6);
+        const r3 = 1.0 + 0.12 * Math.sin(8 * this.a2(nx, ny) + t * 2) * Math.cos(t * 1.2) + 0.05 * Math.sin(6 * this.e2(ny, nz));
         const tx3 = bx * r3, ty3 = by * r3, tz3 = bz * r3;
 
         let tx, ty, tz;
@@ -189,50 +186,62 @@ class CoreMesh {
     return this._smoothAudio[i0] * (1 - fr) + this._smoothAudio[i1] * fr;
   }
 
-  sampleRipple(u, v, t) {
-    const u01 = (u % 1 + 1) % 1;
-    const v01 = Math.max(0, Math.min(1, v));
-    const d = Math.hypot(u01 - 0.5, v01 - 0.5) * 2;
-    const bass = this.freqAt(0.05);
-    const high = this.freqAt(0.65);
+  a2(x, y) { return Math.atan2(y, x); }
+  e2(x, y) { return Math.acos(THREE.MathUtils.clamp(y, -1, 1)); }
 
-    const rings = 5.5;
-    const phase = d * rings - t * (1.4 + bass * 2.2);
-    const ripple = Math.pow(0.5 + 0.5 * Math.sin(phase), 2);
-    const distanceFalloff = Math.max(0, 1 - d * 0.65);
-    const ampTaper = 0.35 + bass * 1.6;
-    const directional = Math.sin(u01 * Math.PI * 2) * 0.25 + 1;
-    return ripple * distanceFalloff * ampTaper * directional * high;
+  hash(px, py, pz) {
+    const s = Math.sin(px * 127.1 + py * 311.7 + pz * 74.7) * 43758.5453;
+    return s - Math.floor(s);
   }
 
-  sampleWave(u, v, t) {
-    const u01 = (u % 1 + 1) % 1;
-    const v01 = Math.max(0, Math.min(1, v));
-    const coord = u01 * 5 + v01 * 2;
-    const phase = coord - t * 1.1;
+  sin2(x, y, z, k) { return Math.sin(x * k + y * k * 0.7 + z * k * 0.5); }
+  cos2(x, y, z, k) { return Math.cos(x * k * 0.6 + y * k + z * k * 0.8); }
+
+  sampleRipple(x, y, z, t) {
+    const la = 10, lo = 12;
+    const px = Math.floor((this.a2(x, y) / (Math.PI * 2) + 0.5) * lo + 0.5);
+    const py = Math.floor((this.e2(y, z) / Math.PI) * la + 0.5);
+    const bass = this.freqAt(0.04);
+    const high = this.freqAt(0.6);
+
+    const wave = Math.sin(this.e2(y, z) * 8 - t * (3.0 + bass * 3.0) * (1.0 + high)) + Math.sin(this.a2(x, y) * 6 - t * (2.0 + bass * 2.0));
+    const ripple = Utils.smoothstep(0.5 + 0.5 * wave);
+    const weight = 0.5 + 0.5 * this.sin2(x, y, z, 2);
+    const amp = (0.4 + bass * 1.6) * (0.25 + high * 1.3);
+    return (ripple * weight - 0.25) * amp * 1.4;
+  }
+
+  sampleWave(x, y, z, t) {
     const bass = this.freqAt(0.03);
     const mid = this.freqAt(0.4);
     const treble = this.freqAt(0.75);
-    const swell = bass * 0.5 + mid * 0.35 + treble * 0.15;
+    const swell = bass * 0.6 + mid * 0.3 + treble * 0.1;
 
-    const crest = Utils.smoothstep(Math.sin(phase) * 0.5 + 0.5);
-    const secondary = Math.sin(coord * 0.3 + t * 0.7) * 0.5 + 0.5;
-    const height = crest * (0.3 + swell * 1.7) + secondary * mid * 0.35;
-    return (height - 0.5) * 0.9;
+    const travel = t * (0.8 + bass * 1.6);
+    const n1 = this.sin2(x, y, z, 2 * 0.7 + swell * 2);
+    const n2 = this.cos2(x, y, z, 3 * 0.5 + treble * 1.5);
+    const field = Math.sin(this.a2(x, y) * 3 - travel) * (0.4 + bass * 2.2)
+               + Math.sin(this.e2(y, z) * 4 + travel * 0.7) * (0.25 + mid * 1.6)
+               + n1 * 0.3 * (1 + treble) + n2 * 0.2 * (1 + mid);
+    return field * (0.18 + swell * 0.4);
   }
 
-  sampleFreq(u, v, t, cells, amp) {
-    const gu = u * cells, gv = v * cells;
-    let iu = Math.floor(gu), iv = Math.floor(gv);
-    const fu = gu - iu, fv = gv - iv;
-    iu = (iu % cells + cells) % cells;
-    iv = (iv % cells + cells) % cells;
-
-    const mound = Math.sin(fu * Math.PI) * Math.sin(fv * Math.PI);
-    const idx = iu + iv * cells;
+  sampleFreq(x, y, z, t, amp) {
+    const cells = 5;
+    const px = Math.floor((this.a2(x, y) / (Math.PI * 2) + 0.5) * cells + 0.5);
+    const py = Math.floor((this.e2(y, z) / Math.PI) * cells + 0.5) * cells;
+    const idx = px + py;
     const drive = this.freqAt((idx * 0.61803) % 1);
-    const pulse = 0.5 + 0.5 * Math.sin(t * (0.6 + drive * 1.4) + idx * 2.4);
-    const level = (mound - 0.5) * 2 * (0.4 + drive * 1.4) * pulse;
+
+    const fx = this.a2(x, y) / (Math.PI * 2) + 0.5;
+    const fy = this.e2(y, z) / Math.PI;
+    const fxq = (fx * cells - Math.floor(fx * cells)) * 4 - 2;
+    const fyq = (fy * cells - Math.floor(fy * cells)) * 4 - 2;
+    const mound = Math.max(0, 1 - fxq * fxq) * Math.max(0, 1 - fyq * fyq);
+
+    const wobble = 0.5 + 0.5 * this.sin2(x, y, z, 3);
+    const pulsey = 0.6 + 0.4 * Math.sin(t * (0.8 + drive * 1.8) + this.hash(x, y, z) * 12.0);
+    const level = (mound * 2 - 0.5) * (0.35 + drive * 1.6) * wobble * pulsey;
     return level * amp;
   }
 }
