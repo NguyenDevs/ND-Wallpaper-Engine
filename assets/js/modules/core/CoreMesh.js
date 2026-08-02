@@ -4,6 +4,7 @@ class CoreMesh {
     this.RADIUS = radius;
     this._smoothAudio = new Float32Array(64).fill(0);
     this._avg = 0;
+    this._waveEnv = 0;
     this.detail = ((window.wallpaperConfig || {}).coreDetail) ?? 7;
     this.initGeometry();
     this.initMaterial();
@@ -133,6 +134,9 @@ class CoreMesh {
     const sens = ((cfg.musicSensitive ?? 50) / 50) * 0.7;
     const gain = this._avg > 0.02 ? Math.min(1.2, sens / (this._avg * 3.0)) : sens;
 
+    const wt = Math.min(1.0, 0.12 + this.freqAt(0.03) * 0.3 + this.freqAt(0.4) * 0.3 + this.freqAt(0.75) * 0.18);
+    this._waveEnv += (wt - this._waveEnv) * 0.03;
+
     for (let i = 0; i < N; i++) {
       const idx = i * 3;
       const bx = this.basePos[idx], by = this.basePos[idx + 1], bz = this.basePos[idx + 2];
@@ -213,22 +217,20 @@ class CoreMesh {
     return (ripple * weight - 0.25) * amp * 0.3;
   }
 
-  sampleWave(x, y, z, t) {
-    const bass = this.freqAt(0.03);
+sampleWave(x, y, z, t) {
     const mid = this.freqAt(0.4);
-    const treble = this.freqAt(0.75);
-    const swell = Math.min(1.0, 0.2 + bass * 0.4 + mid * 0.4 + treble * 0.2);
-    const amp = 0.06 + swell * 0.22;
+    const swell = this._waveEnv;
+    const amp = 0.04 + swell * 0.26;
 
-    const speed = t * (0.9 + bass * 0.9);
-    const w1 = 0.5 + 0.5 * Math.sin(x * 2.0 + (y + z) * 1.4 - speed * 1.6);
-    const w2 = 0.5 + 0.5 * Math.sin(y * 2.0 + (x - z) * 1.3 - speed * 1.3 + 1.3);
-    const w3 = 0.5 + 0.5 * Math.sin(z * 2.0 + (x + y) * 1.2 - speed * 1.1 + 2.6);
+    const flowT = t * 0.5;
+    const w1 = 0.5 + 0.5 * Math.sin(x * 2.0 + (y + z) * 1.4 - flowT * 1.6);
+    const w2 = 0.5 + 0.5 * Math.sin(y * 2.0 + (x - z) * 1.3 - flowT * 1.3 + 1.3);
+    const w3 = 0.5 + 0.5 * Math.sin(z * 2.0 + (x + y) * 1.2 - flowT * 1.1 + 2.6);
     const flow = (w1 * 0.45 + w2 * 0.3 + w3 * 0.25) * 2.0 - 1.0;
 
-    const oct = 0.5 + 0.5 * Math.sin(x * 4.5 + y * 4.7 + z * 4.3 + speed * 2.4);
-    const fine = oct * 0.5 + 0.5;
-    return flow * amp * (0.6 + 0.4 * fine) * (1.0 + mid * 0.6);
+    const octT = t * 0.25;
+    const fine = 0.5 + 0.5 * Math.sin(x * 4.5 + y * 4.7 + z * 4.3 + octT * 2.4);
+    return flow * amp * (0.6 + 0.4 * fine) * (1.0 + mid * 0.5);
   }
 
   sampleFreq(x, y, z, t) {
