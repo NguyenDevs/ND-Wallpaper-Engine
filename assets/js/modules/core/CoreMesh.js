@@ -131,11 +131,12 @@ class CoreMesh {
       this._avg += (avg - this._avg) * 0.05;
     }
 
-    const sens = ((cfg.musicSensitive ?? 50) / 50) * 0.7;
+    const sens = ((cfg.musicSensitive ?? 50) / 50) * 0.85;
     const gain = this._avg > 0.02 ? Math.min(1.2, sens / (this._avg * 3.0)) : sens;
+    const waveGain = 0.8 + sens * 0.6;
 
-    const wt = Math.min(1.0, 0.12 + this.freqAt(0.03) * 0.3 + this.freqAt(0.4) * 0.3 + this.freqAt(0.75) * 0.18);
-    this._waveEnv += (wt - this._waveEnv) * 0.03;
+    const wt = Math.min(1.2, this.freqAt(0.03) * 0.4 + this.freqAt(0.4) * 0.4 + this.freqAt(0.75) * 0.2);
+    this._waveEnv += (wt - this._waveEnv) * (wt > this._waveEnv ? 0.22 : 0.06);
 
     for (let i = 0; i < N; i++) {
       const idx = i * 3;
@@ -146,7 +147,7 @@ class CoreMesh {
         let dr = 0;
         const styleL = (musicStyle || 'tectonic').toLowerCase();
         if (styleL === 'tectonic') dr = this.sampleFreq(nx, ny, nz, t) * gain;
-        else if (styleL === 'wave') dr = this.sampleWave(nx, ny, nz, t) * gain;
+        else if (styleL === 'wave') dr = this.sampleWave(nx, ny, nz, t) * waveGain;
         else if (styleL === 'ripple') dr = this.sampleRipple(nx, ny, nz, t) * gain;
 
         positions[idx] = bx + nx * dr;
@@ -220,7 +221,7 @@ class CoreMesh {
 sampleWave(x, y, z, t) {
     const mid = this.freqAt(0.4);
     const swell = this._waveEnv;
-    const amp = 0.04 + swell * 0.26;
+    const amp = 0.05 + swell * 0.4;
 
     const flowT = t * 0.5;
     const w1 = 0.5 + 0.5 * Math.sin(x * 2.0 + (y + z) * 1.4 - flowT * 1.6);
