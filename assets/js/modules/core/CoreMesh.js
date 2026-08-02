@@ -23,17 +23,13 @@ class CoreMesh {
     this.geo = new THREE.IcosahedronGeometry(this.RADIUS, Math.max(1, Math.round(this.detail || 7)));
     this.basePos = new Float32Array(this.geo.attributes.position.array);
     const N = this.basePos.length / 3;
-    this.thetaArr = new Float32Array(N);
-    this.phiArr = new Float32Array(N);
-    this.normalBase = new Float32Array(3 * N);
+    this.normBase = new Float32Array(3 * N);
     const randoms = new Float32Array(N);
 
     for (let i = 0; i < N; i++) {
       const x = this.basePos[i * 3] / this.RADIUS;
       const y = this.basePos[i * 3 + 1] / this.RADIUS;
       const z = this.basePos[i * 3 + 2] / this.RADIUS;
-      this.thetaArr[i] = Math.atan2(z, x);
-      this.phiArr[i] = Math.acos(Math.max(-1, Math.min(1, y)));
       this.normBase[i * 3] = x;
       this.normBase[i * 3 + 1] = y;
       this.normBase[i * 3 + 2] = z;
