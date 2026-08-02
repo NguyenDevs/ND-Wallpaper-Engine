@@ -217,13 +217,18 @@ class CoreMesh {
     const bass = this.freqAt(0.03);
     const mid = this.freqAt(0.4);
     const treble = this.freqAt(0.75);
-    const swell = bass * 0.4 + mid * 0.4 + treble * 0.2;
+    const swell = Math.min(1.0, 0.2 + bass * 0.4 + mid * 0.4 + treble * 0.2);
+    const amp = 0.06 + swell * 0.22;
 
-    const travel = t * (0.7 + bass * 0.7);
-    const field = Math.sin(this.a2(x, y) * 3 - travel) * (0.5 + bass * 1.1)
-               + Math.sin(this.e2(y, z) * 4 + travel * 0.6) * (0.35 + mid * 0.9)
-               + this.sin2(x, y, z, 2) * 0.2 * (0.5 + treble);
-    return field * (0.12 + swell * 0.18);
+    const speed = t * (0.9 + bass * 0.9);
+    const w1 = 0.5 + 0.5 * Math.sin(x * 2.0 + (y + z) * 1.4 - speed * 1.6);
+    const w2 = 0.5 + 0.5 * Math.sin(y * 2.0 + (x - z) * 1.3 - speed * 1.3 + 1.3);
+    const w3 = 0.5 + 0.5 * Math.sin(z * 2.0 + (x + y) * 1.2 - speed * 1.1 + 2.6);
+    const flow = (w1 * 0.45 + w2 * 0.3 + w3 * 0.25) * 2.0 - 1.0;
+
+    const oct = 0.5 + 0.5 * Math.sin(x * 4.5 + y * 4.7 + z * 4.3 + speed * 2.4);
+    const fine = oct * 0.5 + 0.5;
+    return flow * amp * (0.6 + 0.4 * fine) * (1.0 + mid * 0.6);
   }
 
   sampleFreq(x, y, z, t) {
