@@ -3,6 +3,7 @@ class CoreMesh {
     this.group = group;
     this.RADIUS = radius;
     this._smoothAudio = new Float32Array(64).fill(0);
+    this._avg = 0;
     this.detail = ((window.wallpaperConfig || {}).coreDetail) ?? 7;
     this.initGeometry();
     this.initMaterial();
@@ -119,11 +120,18 @@ class CoreMesh {
     const N = this.basePos.length / 3;
 
     if (musicEnable && audioData) {
+      let sum = 0;
       for (let j = 0; j < 64; j++) {
         const v = audioData[j];
-        this._smoothAudio[j] += (v - this._smoothAudio[j]) * (v > this._smoothAudio[j] ? 0.45 : 0.08);
+        sum += v;
+        this._smoothAudio[j] += (v - this._smoothAudio[j]) * (v > this._smoothAudio[j] ? 0.4 : 0.06);
       }
+      const avg = sum / 64;
+      this._avg += (avg - this._avg) * 0.05;
     }
+
+    const sens = ((cfg.musicSensitive ?? 50) / 50) * 0.7;
+    const gain = this._avg > 0.02 ? Math.min(1.2, sens / (this._avg * 3.0)) : sens;
 
     for (let i = 0; i < N; i++) {
       const idx = i * 3;
@@ -133,9 +141,9 @@ class CoreMesh {
       if (musicEnable) {
         let dr = 0;
         const styleL = (musicStyle || 'tectonic').toLowerCase();
-        if (styleL === 'tectonic') dr = this.sampleFreq(nx, ny, nz, t, 1.6);
-        else if (styleL === 'wave') dr = this.sampleWave(nx, ny, nz, t);
-        else if (styleL === 'ripple') dr = this.sampleRipple(nx, ny, nz, t);
+        if (styleL === 'tectonic') dr = this.sampleFreq(nx, ny, nz, t) * gain;
+        else if (styleL === 'wave') dr = this.sampleWave(nx, ny, nz, t) * gain;
+        else if (styleL === 'ripple') dr = this.sampleRipple(nx, ny, nz, t) * gain;
 
         positions[idx] = bx + nx * dr;
         positions[idx + 1] = by + ny * dr;
@@ -194,35 +202,31 @@ class CoreMesh {
   cos2(x, y, z, k) { return Math.cos(x * k * 0.6 + y * k + z * k * 0.8); }
 
   sampleRipple(x, y, z, t) {
-    const la = 10, lo = 12;
-    const px = Math.floor((this.a2(x, y) / (Math.PI * 2) + 0.5) * lo + 0.5);
-    const py = Math.floor((this.e2(y, z) / Math.PI) * la + 0.5);
     const bass = this.freqAt(0.04);
     const high = this.freqAt(0.6);
 
-    const wave = Math.sin(this.e2(y, z) * 8 - t * (3.0 + bass * 3.0) * (1.0 + high)) + Math.sin(this.a2(x, y) * 6 - t * (2.0 + bass * 2.0));
-    const ripple = Utils.smoothstep(0.5 + 0.5 * wave);
+    const wave = Math.sin(this.e2(y, z) * 6 - t * (2.0 + bass * 0.8))
+               + Math.sin(this.a2(x, y) * 4 - t * (1.5 + bass * 0.6));
+    const ripple = Utils.smoothstep(0.5 + 0.5 * wave * 0.6);
     const weight = 0.5 + 0.5 * this.sin2(x, y, z, 2);
-    const amp = (0.4 + bass * 1.6) * (0.25 + high * 1.3);
-    return (ripple * weight - 0.25) * amp * 1.4;
+    const amp = 0.5 + bass * 0.9 + high * 0.6;
+    return (ripple * weight - 0.25) * amp * 0.3;
   }
 
   sampleWave(x, y, z, t) {
     const bass = this.freqAt(0.03);
     const mid = this.freqAt(0.4);
     const treble = this.freqAt(0.75);
-    const swell = bass * 0.6 + mid * 0.3 + treble * 0.1;
+    const swell = bass * 0.4 + mid * 0.4 + treble * 0.2;
 
-    const travel = t * (0.8 + bass * 1.6);
-    const n1 = this.sin2(x, y, z, 2 * 0.7 + swell * 2);
-    const n2 = this.cos2(x, y, z, 3 * 0.5 + treble * 1.5);
-    const field = Math.sin(this.a2(x, y) * 3 - travel) * (0.4 + bass * 2.2)
-               + Math.sin(this.e2(y, z) * 4 + travel * 0.7) * (0.25 + mid * 1.6)
-               + n1 * 0.3 * (1 + treble) + n2 * 0.2 * (1 + mid);
-    return field * (0.18 + swell * 0.4);
+    const travel = t * (0.7 + bass * 0.7);
+    const field = Math.sin(this.a2(x, y) * 3 - travel) * (0.5 + bass * 1.1)
+               + Math.sin(this.e2(y, z) * 4 + travel * 0.6) * (0.35 + mid * 0.9)
+               + this.sin2(x, y, z, 2) * 0.2 * (0.5 + treble);
+    return field * (0.12 + swell * 0.18);
   }
 
-  sampleFreq(x, y, z, t, amp) {
+  sampleFreq(x, y, z, t) {
     const cells = 5;
     const px = Math.floor((this.a2(x, y) / (Math.PI * 2) + 0.5) * cells + 0.5);
     const py = Math.floor((this.e2(y, z) / Math.PI) * cells + 0.5) * cells;
@@ -236,8 +240,8 @@ class CoreMesh {
     const mound = Math.max(0, 1 - fxq * fxq) * Math.max(0, 1 - fyq * fyq);
 
     const wobble = 0.5 + 0.5 * this.sin2(x, y, z, 3);
-    const pulsey = 0.6 + 0.4 * Math.sin(t * (0.8 + drive * 1.8) + this.hash(x, y, z) * 12.0);
-    const level = (mound * 2 - 0.5) * (0.35 + drive * 1.6) * wobble * pulsey;
-    return level * amp;
+    const pulsey = 0.6 + 0.4 * Math.sin(t * (0.7 + drive * 0.9) + this.hash(x, y, z) * 9.0);
+    const level = (mound * 1.5 - 0.25) * (0.3 + drive * 0.8) * wobble * pulsey;
+    return level * 0.45;
   }
 }
