@@ -125,7 +125,7 @@ class CoreMesh {
       for (let j = 0; j < 64; j++) {
         const v = audioData[j];
         sum += v;
-        this._smoothAudio[j] += (v - this._smoothAudio[j]) * (v > this._smoothAudio[j] ? 0.4 : 0.06);
+        this._smoothAudio[j] += (v - this._smoothAudio[j]) * (v > this._smoothAudio[j] ? 0.7 : 0.06);
       }
       const avg = sum / 64;
       this._avg += (avg - this._avg) * 0.05;
@@ -136,7 +136,7 @@ class CoreMesh {
     const waveGain = 1.0 + sens * 0.8;
 
     const wt = Math.min(1.6, this.freqAt(0.03) * 0.5 + this.freqAt(0.4) * 0.4 + this.freqAt(0.75) * 0.25);
-    this._waveEnv += (wt - this._waveEnv) * (wt > this._waveEnv ? 0.3 : 0.06);
+    this._waveEnv += (wt - this._waveEnv) * (wt > this._waveEnv ? 0.5 : 0.06);
 
     for (let i = 0; i < N; i++) {
       const idx = i * 3;
