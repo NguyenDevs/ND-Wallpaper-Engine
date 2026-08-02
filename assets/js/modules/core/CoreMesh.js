@@ -44,7 +44,7 @@ class CoreMesh {
   initMaterial() {
     this.wireMat = new THREE.MeshPhysicalMaterial({
       color: 0x8800ff, emissive: 0x220066, emissiveIntensity: 0.8,
-      wireframe: true, transparent: true, opacity: 0.25,
+      wireframe: true, transparent: true, opacity: 0.12,
       blending: THREE.AdditiveBlending, depthWrite: false,
     });
 
