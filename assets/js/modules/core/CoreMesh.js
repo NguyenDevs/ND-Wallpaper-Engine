@@ -121,7 +121,8 @@ class CoreMesh {
 
     if (musicEnable && audioData) {
       for (let j = 0; j < 64; j++) {
-        this._smoothAudio[j] += (audioData[j] - this._smoothAudio[j]) * 0.15;
+        const v = audioData[j];
+        this._smoothAudio[j] += (v - this._smoothAudio[j]) * (v > this._smoothAudio[j] ? 0.45 : 0.08);
       }
     }
 
@@ -131,20 +132,18 @@ class CoreMesh {
 
       if (musicEnable) {
         let r = 1.0;
-        const style = (musicStyle || 'tectonic').toLowerCase();
-        
-        if (style === 'tectonic') {
-          const pattern = Math.sin(6 * theta) * Math.cos(6 * phi);
-          const block = pattern > 0.33 ? 0.2 : pattern < -0.33 ? -0.15 : 0;
-          const dr = block * audioIntensity * 1.2;
+        const styleL = (musicStyle || 'tectonic').toLowerCase();
+
+        if (styleL === 'tectonic') {
+          const dr = this.sampleFreq(theta / (Math.PI * 2), phi / Math.PI, t, 4, 1.6);
           r = 1.0 + dr;
-        } else if (style === 'wave') {
+        } else if (styleL === 'wave') {
           const n1 = Math.sin(4 * theta + tSmooth * 0.5) * Math.cos(4 * phi - tSmooth * 0.4);
           const n2 = Math.sin(8 * theta - tSmooth) * Math.cos(8 * phi + tSmooth * 0.5);
           const plate = Utils.smoothstep(0.5 + (n1 * 0.7 + n2 * 0.3) * 0.5);
           const dr = (plate - 0.5) * 0.8 * audioIntensity;
           r = 1.0 + dr;
-        } else if (style === 'ripple') {
+        } else if (styleL === 'ripple') {
           const wave = Math.sin(phi * 8 - tSmooth * 5) * 0.5 + 0.5;
           const dr = wave * audioIntensity * 0.5;
           r = 1.0 + dr;
@@ -183,5 +182,29 @@ class CoreMesh {
     this.geo.attributes.position.needsUpdate = true;
     this.geo.computeVertexNormals();
     if (this.pointsMat.userData.shader) this.pointsMat.userData.shader.uniforms.uTime.value = t;
+  }
+
+  freqAt(f) {
+    const n = this._smoothAudio.length;
+    const pos = ((f % 1) + 1) % 1 * n;
+    const i0 = Math.floor(pos) % n;
+    const i1 = (i0 + 1) % n;
+    const fr = pos - Math.floor(pos);
+    return this._smoothAudio[i0] * (1 - fr) + this._smoothAudio[i1] * fr;
+  }
+
+  sampleFreq(u, v, t, cells, amp) {
+    const gu = u * cells, gv = v * cells;
+    let iu = Math.floor(gu), iv = Math.floor(gv);
+    const fu = gu - iu, fv = gv - iv;
+    iu = (iu % cells + cells) % cells;
+    iv = (iv % cells + cells) % cells;
+
+    const mound = Math.sin(fu * Math.PI) * Math.sin(fv * Math.PI);
+    const idx = iu + iv * cells;
+    const drive = this.freqAt((idx * 0.61803) % 1);
+    const pulse = 0.5 + 0.5 * Math.sin(t * (0.6 + drive * 1.4) + idx * 2.4);
+    const level = (mound - 0.5) * 2 * (0.4 + drive * 1.4) * pulse;
+    return level * amp;
   }
 }
