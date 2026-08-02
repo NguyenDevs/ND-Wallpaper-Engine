@@ -138,10 +138,7 @@ class CoreMesh {
           const dr = this.sampleFreq(theta / (Math.PI * 2), phi / Math.PI, t, 4, 1.6);
           r = 1.0 + dr;
         } else if (styleL === 'wave') {
-          const n1 = Math.sin(4 * theta + tSmooth * 0.5) * Math.cos(4 * phi - tSmooth * 0.4);
-          const n2 = Math.sin(8 * theta - tSmooth) * Math.cos(8 * phi + tSmooth * 0.5);
-          const plate = Utils.smoothstep(0.5 + (n1 * 0.7 + n2 * 0.3) * 0.5);
-          const dr = (plate - 0.5) * 0.8 * audioIntensity;
+          const dr = this.sampleWave(theta, phi, tSmooth);
           r = 1.0 + dr;
         } else if (styleL === 'ripple') {
           const wave = Math.sin(phi * 8 - tSmooth * 5) * 0.5 + 0.5;
@@ -191,6 +188,22 @@ class CoreMesh {
     const i1 = (i0 + 1) % n;
     const fr = pos - Math.floor(pos);
     return this._smoothAudio[i0] * (1 - fr) + this._smoothAudio[i1] * fr;
+  }
+
+  sampleWave(u, v, t) {
+    const u01 = (u % 1 + 1) % 1;
+    const v01 = Math.max(0, Math.min(1, v));
+    const coord = u01 * 5 + v01 * 2;
+    const phase = coord - t * 1.1;
+    const bass = this.freqAt(0.03);
+    const mid = this.freqAt(0.4);
+    const treble = this.freqAt(0.75);
+    const swell = bass * 0.5 + mid * 0.35 + treble * 0.15;
+
+    const crest = Utils.smoothstep(Math.sin(phase) * 0.5 + 0.5);
+    const secondary = Math.sin(coord * 0.3 + t * 0.7) * 0.5 + 0.5;
+    const height = crest * (0.3 + swell * 1.7) + secondary * mid * 0.35;
+    return (height - 0.5) * 0.9;
   }
 
   sampleFreq(u, v, t, cells, amp) {
