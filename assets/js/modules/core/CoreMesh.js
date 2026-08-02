@@ -141,8 +141,7 @@ class CoreMesh {
           const dr = this.sampleWave(theta, phi, tSmooth);
           r = 1.0 + dr;
         } else if (styleL === 'ripple') {
-          const wave = Math.sin(phi * 8 - tSmooth * 5) * 0.5 + 0.5;
-          const dr = wave * audioIntensity * 0.5;
+          const dr = this.sampleRipple(theta, phi, tSmooth);
           r = 1.0 + dr;
         }
         positions[idx] = bx * r;
@@ -188,6 +187,22 @@ class CoreMesh {
     const i1 = (i0 + 1) % n;
     const fr = pos - Math.floor(pos);
     return this._smoothAudio[i0] * (1 - fr) + this._smoothAudio[i1] * fr;
+  }
+
+  sampleRipple(u, v, t) {
+    const u01 = (u % 1 + 1) % 1;
+    const v01 = Math.max(0, Math.min(1, v));
+    const d = Math.hypot(u01 - 0.5, v01 - 0.5) * 2;
+    const bass = this.freqAt(0.05);
+    const high = this.freqAt(0.65);
+
+    const rings = 5.5;
+    const phase = d * rings - t * (1.4 + bass * 2.2);
+    const ripple = Math.pow(0.5 + 0.5 * Math.sin(phase), 2);
+    const distanceFalloff = Math.max(0, 1 - d * 0.65);
+    const ampTaper = 0.35 + bass * 1.6;
+    const directional = Math.sin(u01 * Math.PI * 2) * 0.25 + 1;
+    return ripple * distanceFalloff * ampTaper * directional * high;
   }
 
   sampleWave(u, v, t) {
