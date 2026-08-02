@@ -133,10 +133,10 @@ class CoreMesh {
 
     const sens = ((cfg.musicSensitive ?? 50) / 50) * 0.85;
     const gain = this._avg > 0.02 ? Math.min(1.2, sens / (this._avg * 3.0)) : sens;
-    const waveGain = 0.8 + sens * 0.6;
+    const waveGain = 1.0 + sens * 0.8;
 
-    const wt = Math.min(1.2, this.freqAt(0.03) * 0.4 + this.freqAt(0.4) * 0.4 + this.freqAt(0.75) * 0.2);
-    this._waveEnv += (wt - this._waveEnv) * (wt > this._waveEnv ? 0.22 : 0.06);
+    const wt = Math.min(1.6, this.freqAt(0.03) * 0.5 + this.freqAt(0.4) * 0.4 + this.freqAt(0.75) * 0.25);
+    this._waveEnv += (wt - this._waveEnv) * (wt > this._waveEnv ? 0.3 : 0.06);
 
     for (let i = 0; i < N; i++) {
       const idx = i * 3;
@@ -221,7 +221,7 @@ class CoreMesh {
 sampleWave(x, y, z, t) {
     const mid = this.freqAt(0.4);
     const swell = this._waveEnv;
-    const amp = 0.05 + swell * 0.4;
+    const amp = 0.09 + swell * 0.85;
 
     const flowT = t * 0.5;
     const w1 = 0.5 + 0.5 * Math.sin(x * 2.0 + (y + z) * 1.4 - flowT * 1.6);
@@ -231,7 +231,7 @@ sampleWave(x, y, z, t) {
 
     const octT = t * 0.25;
     const fine = 0.5 + 0.5 * Math.sin(x * 4.5 + y * 4.7 + z * 4.3 + octT * 2.4);
-    return flow * amp * (0.6 + 0.4 * fine) * (1.0 + mid * 0.5);
+    return flow * amp * (0.6 + 0.4 * fine) * (1.0 + mid * 0.6);
   }
 
   sampleFreq(x, y, z, t) {
