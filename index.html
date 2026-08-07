@@ -18,15 +18,23 @@
       --clock-x: 10%;
       --clock-y: 50%;
       --clock-blur: 10px;
+      --clock-scale: 1;
     }
     @media (min-width: 769px) {
       .timer-wrap {
         position: absolute;
         left: var(--clock-x) !important;
         top: var(--clock-y) !important;
-        transform: translateY(-50%) !important;
+        transform: translateY(-50%) scale(var(--clock-scale)) !important;
+        transform-origin: left center;
         backdrop-filter: blur(var(--clock-blur)) !important;
         -webkit-backdrop-filter: blur(var(--clock-blur)) !important;
+      }
+    }
+    @media (max-width: 768px) {
+      .timer-wrap {
+        transform: scale(var(--clock-scale)) !important;
+        transform-origin: center center;
       }
     }
   </style>
@@ -157,6 +165,8 @@
       musicStyle: "tectonic",
       clockMode: 0,
       clockEnable: true,
+      clockScale: 1.0,
+      clockDblClick: true,
       ringSpacing: 1.0,
       corePolygon: false,
       coreDetail: 8,
@@ -272,17 +282,35 @@
 
     setInterval(updateClock, 1000); updateClock();
 
-    // Wave Effect & Double Click
-    document.querySelector('.timer-wrap').addEventListener('dblclick', function(e) {
-      const wave = document.createElement('div');
-      wave.className = 'wave-effect';
-      wave.style.left = e.clientX + 'px';
-      wave.style.top = e.clientY + 'px';
-      document.body.appendChild(wave);
-      setTimeout(() => wave.remove(), 600);
+    // Ripple Effect & Double Click Switch
+    function spawnRipple(x, y) {
+      const colors = ['rgba(178,137,239,0.8)', 'rgba(214,168,255,0.6)', 'rgba(150,97,255,0.5)'];
+      for (let i = 0; i < 3; i++) {
+        const ring = document.createElement('div');
+        ring.className = 'wave-effect';
+        ring.style.left = x + 'px';
+        ring.style.top = y + 'px';
+        ring.style.borderColor = colors[i];
+        ring.style.animationDelay = (i * 0.12) + 's';
+        document.body.appendChild(ring);
+        setTimeout(() => ring.remove(), 1200);
+      }
+    }
 
-      window.wallpaperConfig.clockMode = window.wallpaperConfig.clockMode === 0 ? 1 : 0;
-      updateClock();
+    function switchClockMode() {
+      const wrap = document.querySelector('.timer-wrap');
+      wrap.classList.add('clock-fading');
+      setTimeout(function() {
+        window.wallpaperConfig.clockMode = window.wallpaperConfig.clockMode === 0 ? 1 : 0;
+        updateClock();
+        wrap.classList.remove('clock-fading');
+      }, 260);
+    }
+
+    document.querySelector('.timer-wrap').addEventListener('dblclick', function(e) {
+      if (!window.wallpaperConfig.clockDblClick) return;
+      spawnRipple(e.clientX, e.clientY);
+      switchClockMode();
     });
 
     window.wallpaperPropertyListener = {
@@ -335,6 +363,8 @@
         if (properties.clockoffsetx) root.style.setProperty('--clock-x', properties.clockoffsetx.value + '%');
         if (properties.clockoffsety) root.style.setProperty('--clock-y', properties.clockoffsety.value + '%');
         if (properties.clockblur) root.style.setProperty('--clock-blur', properties.clockblur.value + 'px');
+        if (properties.clockscale) root.style.setProperty('--clock-scale', properties.clockscale.value);
+        if (properties.clockdblclick) window.wallpaperConfig.clockDblClick = properties.clockdblclick.value;
 
         const labels = ['year', 'month', 'day', 'hour', 'minute', 'second'];
         labels.forEach(l => {
