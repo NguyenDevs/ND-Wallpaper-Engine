@@ -332,6 +332,25 @@
 				"step": 1,
 				"value": 2
 			},
+			"clockscale": {
+				"group": "group_clock",
+				"index": 307,
+				"order": 307,
+				"text": "Clock Scale",
+				"type": "slider",
+				"min": 0.5,
+				"max": 2.5,
+				"step": 0.05,
+				"value": 1
+			},
+			"clockdblclick": {
+				"group": "group_clock",
+				"index": 308,
+				"order": 308,
+				"text": "Double Click Switch",
+				"type": "bool",
+				"value": true
+			},
 
 			"group_text": {
 				"index": 400,
